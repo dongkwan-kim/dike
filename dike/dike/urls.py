@@ -22,4 +22,5 @@ urlpatterns = [
     url(r'^base/', view.base),
     url(r'^$', view.home),
     url(r'^judgement/([\d]+)/', view.get_judgement),
+    url(r'^editor/split/([\d]+)/', view.get_splitter),
 ]
