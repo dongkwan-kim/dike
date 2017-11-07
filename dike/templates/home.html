@@ -4,13 +4,15 @@
   <my-component></my-component>
 </div>
 
+{% verbatim %}
 <template id='list'>
   <div class='collection'>
     <a v-for='j in judgements' class='collection-item'>
-        [ j.titleee ]
+       {{ j.title }}
     </a>
   </div>
 </template>
+{% endverbatim %}
 
 <script>
 var sample_list = [
@@ -22,11 +24,9 @@ Vue.component('my-component', {
   template: '#list',
   data: () => ({ judgements: sample_list }),
 })
-// Vue.options.delimiters = ['[[', ']]']
 
 new Vue({
   el: '#app',
-  delimiters: ['[', ']']
 })
 </script>
 {% endblock %}
