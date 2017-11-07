@@ -21,4 +21,5 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^base/', view.base),
     url(r'^$', view.home),
+    url(r'^judgement/([\d]+)/', view.get_judgement),
 ]
