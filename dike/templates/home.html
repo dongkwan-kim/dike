@@ -8,7 +8,7 @@
 {% verbatim %}
 <template id='list'>
     <div class='collection'>
-        <a v-for='j in judgements' class='collection-item'>
+        <a v-for='j in judgements' class='collection-item' :href="`/${j.id}`">
             {{ j.title }}
         </a>
     </div>
