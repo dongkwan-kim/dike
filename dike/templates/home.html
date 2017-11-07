@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id="app">
+    <list-component></list-component>
+</div>
+
+{% verbatim %}
+<template id='list'>
+    <div class='collection'>
+        <a v-for='j in judgements' class='collection-item' :href="`/${j.id}`">
+            {{ j.title }}
+        </a>
+    </div>
+</template>
+{% endverbatim %}
+
+<script>
+    // Fill json string using django
+    var sample_list = [{
+            'id': 1,
+            'title': '박근혜 탄핵'
+        },
+        {
+            'id': 2,
+            'title': '삼성 전환사채'
+        }
+    ]
+
+    Vue.component('list-component', {
+        template: '#list',
+        data: () => ({
+            judgements: sample_list
+        }),
+    })
+
+    new Vue({
+        el: '#app',
+    })
+
+</script>
+{% endblock %}
