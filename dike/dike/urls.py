@@ -15,7 +15,9 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from webdike import views as view
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^base/', view.base),
 ]
