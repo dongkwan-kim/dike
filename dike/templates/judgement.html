@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id="app">
+    <viewer-component></viewer-component>
+</div>
+
+{% verbatim %}
+<template id='viewer'>
+    <div>
+        <h3>
+            {{ judgement.title }}
+        </h3>
+        <blockquote>
+            {{ judgement.desc }}
+        </blockquote>
+        <div :style="viewerStyle">
+            <a v-for="s in judgement.sentences" :href="`/sentence/${s.id}`">
+                <p>{{s.text}}</p>
+            </a>
+        </div>
+    </div>
+</template>
+{% endverbatim %}
+
+<script src="/static/js/constants.js"></script>
+<script>
+    var sampleJudgement = {
+        title: "기성회비 반환",
+        desc: "[서울중앙지법 2014.5.23, 선고, 2014가합3141, 판결 : 항소]",
+        sentences: sampleParsedJudgementText,
+    }
+
+    Vue.component('viewer-component', {
+        template: '#viewer',
+        data: () => ({
+            judgement: sampleJudgement,
+            viewerStyle: {
+                lineHeight: 2,
+            },
+        }),
+    })
+
+    new Vue({
+        el: '#app',
+    })
+</script>
+{% endblock %}
