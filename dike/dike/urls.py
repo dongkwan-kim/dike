@@ -20,4 +20,5 @@ from webdike import views as view
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^base/', view.base),
+    url(r'^$', view.home),
 ]
