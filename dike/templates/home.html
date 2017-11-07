@@ -1,4 +1,32 @@
 {% extends 'base.html' %}
 {% block content %}
+<div id="app">
+  <my-component></my-component>
+</div>
 
+<template id='list'>
+  <div class='collection'>
+    <a v-for='j in judgements' class='collection-item'>
+        [ j.titleee ]
+    </a>
+  </div>
+</template>
+
+<script>
+var sample_list = [
+  { 'id': 1, 'title': '박근혜 탄핵' },
+  { 'id': 2, 'title': '삼성 전환사채' }
+]
+
+Vue.component('my-component', {
+  template: '#list',
+  data: () => ({ judgements: sample_list }),
+})
+// Vue.options.delimiters = ['[[', ']]']
+
+new Vue({
+  el: '#app',
+  delimiters: ['[', ']']
+})
+</script>
 {% endblock %}
