@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="card-panel teal">
+    <span class="white-text">
+        Dike는 크라우드소싱을 통해서 판결문을 읽기 쉽게 만들어주는 플랫폼입니다. 가독성을 개선할 판결문을 선택해주세요.
+    </span>
+</div>
 <div id="app">
     <list-component></list-component>
 </div>
@@ -8,7 +13,7 @@
 {% verbatim %}
 <template id='list'>
     <div class='collection'>
-        <a v-for='j in judgements' class='collection-item' :href="`/${j.id}`">
+        <a v-for='j in judgements' class='collection-item' :href="`/judgement/${j.id}`">
             {{ j.title }}
         </a>
     </div>

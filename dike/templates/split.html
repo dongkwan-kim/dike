@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<ul class="pagination">
+    <li class="active"><a href="#!">나누기</a></li>
+    <li class="waves-effect disabled"><a href="#!">다듬기</a></li>
+    <li class="waves-effect disabled"><a href="#!">연결하기</a></li>
+    <li class="waves-effect disabled"><a href="#!">교정하기</a></li>
+</ul>
+
+<div id="app">
+    <split-component></split-component>
+</div>
+
+{% verbatim %}
+<template id='splitter'>
+<div>
+    <div>
+        <span v-for="c in chars">
+            <span v-if="c.type === 'word'">
+                {{c.text}}
+            </span>
+            <span
+                v-else
+                v-on:click="toggle(c.index)"
+                v-bind:class="{'markedCSSname': splitPoints.includes(c.index)}"
+                v-bind:style="{backgroundColor: splitPoints.includes(c.index) ? 'orange' : 'white'}"
+            >
+                &nbsp
+            </span>
+        </span>
+    </div>
+    <button class="btn waves-effect waves-light" type="submit" name="action" v-on:click="submit()">Submit
+        <i class="material-icons right">send</i>
+    </button>
+</div>
+</template>
+{% endverbatim %}
+
+<script src="/static/js/constants.js"></script>
+<script>
+    var sampleSentence = {
+        id: 1,
+        text: sampleLongSentence
+    }
+
+    var Splitter = {
+        template: '#splitter',
+        data: () => ({
+            sentence: sampleSentence,
+            chars: sampleSentence.text.split(' ').reduce((acc, cur, index) => {
+                return acc.concat([{ type: 'word', text: cur }, { type: 'space', text: '_', index } ])
+            }, []),
+            splitPoints: [],
+        }),
+        methods: {
+            toggle: function(pos) {
+                index = this.splitPoints.indexOf(pos) // vue reactivity system does not support set
+                if (index === -1)
+                    this.splitPoints.push(pos)
+                else
+                    this.splitPoints.splice(index, 1)
+                console.log(this.splitPoints)
+            },
+            submit: () => {
+                var splitted = []
+                var current = []
+                var words = this.sampleSentence.text.split(' ')
+                for (var i = 0; i < words; i++) {
+                    current.append(words[i])
+                    if (this.splitPoints.includes(i))
+                        splitted.append(current.join(" "))
+                        current = []
+                }
+                //TODO: AJAX POST using django's token
+                postToDjango(splitted)
+            }
+        },
+    }
+
+    new Vue({
+        el: '#app',
+        components: {
+            'split-component': Splitter,
+        }
+    })
+</script>
+{% endblock %}
