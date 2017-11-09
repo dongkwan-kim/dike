@@ -13,3 +13,7 @@ def get_judgement(request, jnum):
 def get_splitter(request, snum):
     # TODO Use model and sentence number
     return render(request, 'split.html')
+
+def get_polisher(request, split_id):
+    # TODO use model and split number
+    return render(request, 'polish.html')

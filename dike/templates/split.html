@@ -8,6 +8,12 @@
     <li class="waves-effect disabled"><a href="#!">교정하기</a></li>
 </ul>
 
+<div class="card-panel teal">
+    <span class="white-text">
+        긴 문장을 적절한 길이로 나누어 주세요. 단어와 단어 사이를 클릭하면 문장이 나누어집니다.
+    </span>
+</div>
+
 <div id="app">
     <split-component :sentence="sentosplit"></split-component>
 </div>
@@ -22,9 +28,9 @@
             </span>
             <span
                 v-else
+                class="splitmark"
                 v-on:click="toggle(c.index)"
-                v-bind:class="{'markedCSSname': splitPoints.includes(c.index)}"
-                v-bind:style="{backgroundColor: splitPoints.includes(c.index) ? 'orange' : 'white'}"
+                v-bind:class="{'marked': splitPoints.includes(c.index)}"
             >
                 &nbsp
             </span>
@@ -36,6 +42,21 @@
 </div>
 </template>
 {% endverbatim %}
+
+<style>
+.splitmark {
+    cursor: pointer;
+}
+
+.splitmark.marked {
+    background-color: orange;
+}
+
+.splitmark:hover {
+    background-color: orange;
+    opacity: 0.3;
+}
+</style>
 
 <script src="/static/js/constants.js"></script>
 <script>
@@ -75,7 +96,11 @@
                         current = []
                 }
                 //TODO: AJAX POST using django's token
-                postToDjango(splitted)
+                postToDjango({
+                    sentences: splitted,
+                    parent: this.sentence.id,
+                    splitPoints: this.splitPoints,
+                })
             }
         },
     }

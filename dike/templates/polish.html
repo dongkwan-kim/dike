@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<ul class="pagination">
+        <li class="waves-effect disabled"><a href="#!">나누기</a></li>
+        <li class="active"><a href="#!">다듬기</a></li>
+        <li class="waves-effect disabled"><a href="#!">연결하기</a></li>
+        <li class="waves-effect disabled"><a href="#!">교정하기</a></li>
+    </ul>
+
+    <div class="card-panel teal">
+        <span class="white-text">
+            잘려져있는 단어들을 완성된 문장으로 바꿔주세요
+        </span>
+    </div>
+
+    <div id="app">
+        <polish-component :sentence="splittedSentence"></polish-component>
+    </div>
+
+{% verbatim %}
+<template id="polish-template">
+
+</template>
+{% endverbatim %}
+
+<script src="/static/js/constants.js"></script>
+<script>
+var sampleSplittedSentence = {
+    id: 1,
+    splitted: sampleSplitted,
+}
+
+var polishComponent = {
+    template: '#polish-template',
+    props: { splitted: Object },
+    data:
+}
+
+</script>
+{% endblock %}
