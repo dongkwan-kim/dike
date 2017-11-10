@@ -8,7 +8,7 @@
 
         {% load static %}
         <link rel="stylesheet" href="{% static "css/base.css" %}">
-      
+
         <!-- vue.js -->
         <script src="https://unpkg.com/vue"></script>
 
@@ -24,12 +24,24 @@
                 </a>
                 <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
                 <ul class="right hide-on-med-and-down">
-                    <li><a href="about.html">About</a></li>
-                    <li><a href="logtin.html">Login</a></li>
+                    {% if user.is_authenticated %}
+                        <li>Welcome {{ user.get_full_name }}</li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="/accounts/logout">Logout</a></li>
+                    {% else %}
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="/accounts/login">Login</a></li>
+                    {% endif %}
                 </ul>
                 <ul class="side-nav" id="mobile-demo">
-                    <li><a href="about.html">About</a></li>
-                    <li><a href="logtin.html">Login</a></li>
+                    {% if user.is_authenticated %}
+                        <li>Welcome {{ user.get_username }}</li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="/accounts/logout">Logout</a></li>
+                    {% else %}
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="/accounts/login">Login</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </nav>
@@ -38,7 +50,7 @@
             {% block content %}
             {% endblock %}
         </div>
-    
+
         <!--Import jQuery before materialize.js-->
         <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
