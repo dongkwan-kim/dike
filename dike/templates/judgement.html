@@ -15,7 +15,7 @@
             {{ judgement.desc }}
         </blockquote>
         <div :style="viewerStyle">
-            <a v-for="s in judgement.sentences" :href="`/sentence/${s.id}`">
+            <a v-for="s in judgement.sentences" href="/editor/split/1">
                 <p>{{s.text}}</p>
             </a>
         </div>
