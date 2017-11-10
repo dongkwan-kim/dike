@@ -11,3 +11,4 @@ class Sentence(models.Model):
 
     document = models.ForeignKey(Document)
     parent = models.ForeignKey('self')
+
