@@ -24,5 +24,8 @@ urlpatterns = [
     url(r'^judgement/([\d]+)/', view.get_judgement),
     url(r'^editor/split/([\d]+)/', view.get_splitter),
     url(r'^editor/polish/([\d]+)/', view.get_polisher),
+    url(r'^editor/connect/([\d]+)/', view.get_connector),
+    url(r'^editor/explain/([\d]+)/', view.get_explainer),
+    url(r'^vote/([\d]+)/([\d]+)/', view.get_voter),
     url(r'^accounts/', include('allauth.urls'))
 ]
