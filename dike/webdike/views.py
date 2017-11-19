@@ -25,3 +25,7 @@ def get_connector(request, snum):
 def get_explainer(request, snum):
     # TODO use model and split number
     return render(request, 'explain.html')
+
+def get_voter(request, snum1, snum2):
+    # TODO use model and split numbers
+    return render(request, 'vote.html')
