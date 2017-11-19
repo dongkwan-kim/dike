@@ -3,21 +3,21 @@
 {% block content %}
 <ul class="pagination">
     <li class="waves-effect disabled"><a href="#!">나누기</a></li>
-    <li class="active"><a href="#!">다듬기</a></li>
-    <li class="waves-effect disabled"><a href="#!">연결하기</a></li>
+    <li class="waves-effect disabled"><a href="#!">다듬기</a></li>
+    <li class="active"><a href="#!">연결하기</a></li>
     <li class="waves-effect disabled"><a href="#!">교정하기</a></li>
 </ul>
 <div class="card-panel teal">
     <span class="white-text">
-        잘려져있는 단어들을 완성된 문장으로 바꿔주세요
+        문장들을 다듬어 문장들이 서로 연결되어 읽히게 고쳐주세요
     </span>
 </div>
 <div id="app">
-    <polish-component :splittedsentences="splittedSentence"></polish-component>
+    <connect-component :sentence="polishedSentence"></connect-component>
 </div>
 
 {% verbatim %}
-<template id="polish-template">
+<template id="connect-template">
 <div>
     <div v-for="p in phrases" class="row">
         <div class="col s6 original">
@@ -42,12 +42,12 @@
 </style>
 
 <script>
-var Polisher = {
-    template: '#polish-template',
-    props: { splittedsentences: Object },
+var Connector = {
+    template: '#connect-template',
+    props: { sentence: Object },
     data: function() {
         return {
-            phrases: this.splittedsentences.phrases.map(p => ({
+            phrases: this.sentence.phrases.map(p => ({
                 before: p,
                 after: p
             }))
@@ -57,9 +57,9 @@ var Polisher = {
 
 new Vue({
     el: '#app',
-    components: { 'polish-component': Polisher },
-    data: { splittedSentence: sampleSplittedSentence},
+    components: { 'connect-component': Connector },
+    data: { polishedSentence: sampleSplittedSentence },
 })
-
 </script>
-{% endblock %}
+
+{% endblock%}
