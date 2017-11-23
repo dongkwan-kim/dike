@@ -363,4 +363,7 @@ tags
 pyvenv.cfg
 pip-selfcheck.json
 
+# VSCode
+.vscode
+
 # End of https://www.gitignore.io/api/git,vim,osx,linux,macos,python,django,pycharm,virtualenv
