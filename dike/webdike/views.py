@@ -1,10 +1,19 @@
 from django.shortcuts import render
+import json
+from webdike.models import *
 
 def base(request):
     return render(request, 'base.html')
 
 def home(request):
-    return render(request, 'home.html')
+    judgements = Document.objects.all()
+    resp = []
+    for j in judgements:
+        resp.append({
+            "id": j.id,
+            "title": j.title
+        })
+    return render(request, 'home.html', { 'doc_list': json.dumps(resp) })
 
 def get_judgement(request, jnum):
     # TODO Use model and jnum
