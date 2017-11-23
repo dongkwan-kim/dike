@@ -19,7 +19,7 @@ class UserHistoryAdmin(admin.ModelAdmin):
 
 @admin.register(Document)
 class DocumentAdmin(admin.ModelAdmin):
-    list_display = list_display_all(Document)
+    list_display = ['id'] + list_display_all(Document)
 
 
 @admin.register(Sentence)
