@@ -25,22 +25,26 @@ def get_judgement(request, jnum):
     }
     return render(request, 'judgement.html', { 'json_resp': json.dumps(resp) })
 
-def get_splitter(request, snum):
-    # TODO Use model and sentence number
-    return render(request, 'split.html')
+def get_splitter(request, sentence_id):
+    sentence = Sentence.objects.get(id=sentence_id)
+    resp = {
+        'id': sentence.id,
+        'text': sentence.content,
+    }
+    return render(request, 'split.html', { 'json_resp': json.dumps(resp) })
 
-def get_polisher(request, split_id):
+def get_polisher(request, step_id):
     # TODO use model and split number
     return render(request, 'polish.html')
 
-def get_connector(request, snum):
+def get_connector(request, step_id):
     # TODO use model and split number
     return render(request, 'connect.html')
 
-def get_explainer(request, snum):
+def get_explainer(request, step_id):
     # TODO use model and split number
     return render(request, 'explain.html')
 
-def get_voter(request, snum1, snum2):
+def get_voter(request, step_id1, step_id2):
     # TODO use model and split numbers
     return render(request, 'vote.html')

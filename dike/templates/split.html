@@ -60,10 +60,13 @@
 
 <script src="/static/js/constants.js"></script>
 <script>
-    var sampleSentence = {
+    var sentence2edit = {{ json_resp|safe }}
+    /*
+    var sentence2edit = {
         id: 1,
         text: sampleLongSentence
     }
+    */
 
     var Splitter = {
         template: '#splitter',
@@ -111,7 +114,7 @@
             'split-component': Splitter,
         },
         data: {
-            sentosplit: sampleSentence
+            sentosplit: sentence2edit
         }
     })
 </script>
