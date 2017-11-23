@@ -13,11 +13,17 @@ def home(request):
             "id": j.id,
             "title": j.title
         })
-    return render(request, 'home.html', { 'doc_list': json.dumps(resp) })
+    return render(request, 'home.html', { 'json_resp': json.dumps(resp) })
 
 def get_judgement(request, jnum):
-    # TODO Use model and jnum
-    return render(request, 'judgement.html')
+    doc = Document.objects.get(id=jnum)
+    sentences = Sentence.objects.filter(document__id=jnum)
+    resp = {
+        'title': doc.title,
+        'desc': doc.description,
+        'sentences': [{'id': s.id, 'text': s.content } for s in sentences]
+    }
+    return render(request, 'judgement.html', { 'json_resp': json.dumps(resp) })
 
 def get_splitter(request, snum):
     # TODO Use model and sentence number

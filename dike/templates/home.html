@@ -36,7 +36,7 @@
 
 <script>
     // Fill json string using django
-    var judgements = {{ doc_list|safe }}
+    var judgements = {{ json_resp|safe }}
     // var sample_list = [{
     //         'id': 1,
     //         'title': '기성회비 반환'
