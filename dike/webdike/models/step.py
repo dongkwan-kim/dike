@@ -23,5 +23,5 @@ class Step(models.Model):
     sentence = models.ForeignKey(Sentence)
     vote = models.IntegerField(default=0)
     active = models.BooleanField(default=False)
-    result = pgfields.JSONField()
+    result = pgfields.ArrayField(models.TextField(), default=[])
     parent_step = models.ForeignKey('self', blank=True)
