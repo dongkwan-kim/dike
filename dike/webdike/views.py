@@ -40,19 +40,19 @@ def get_splitter(request, sentence_id):
 
 
 def get_polisher(request, step_id):
-    step_json = Step.objects.get(id=step_id).to_json()
+    parent_step = Step.objects.get(id=step_id).to_dict()
     # TODO use model and split number
-    return render(request, 'polish.html', {'json_resp': step_json})
+    return render(request, 'polish.html', {'json_resp': json.dumps(parent_step)})
 
 
 def get_connector(request, step_id):
-    step_json = Step.objects.get(id=step_id).to_json()
-    return render(request, 'connect.html', {'json_resp': step_json})
+    parent_step = Step.objects.get(id=step_id).to_dict()
+    return render(request, 'connect.html', {'json_resp': json.dumps(parent_step)})
 
 
 def get_explainer(request, step_id):
-    step_json = Step.objects.get(id=step_id).to_json()
-    return render(request, 'explain.html')
+    parent_step = Step.objects.get(id=step_id).to_dict()
+    return render(request, 'explain.html', {'json_resp': json.dumps(parent_step)})
 
 
 def get_voter(request, step_id1, step_id2):
@@ -62,12 +62,11 @@ def get_voter(request, step_id1, step_id2):
 
 def save_step(request, stage):
     payloads = json.loads(request.body)
-    print(payloads)
-
     parent_step_id = payloads.get("parent_step_id", None)
     try:
         result = payloads["result"]
     except Exception:
+        print('err!!')
         raise Http404("Failed to parse result")
     new_step = Step.objects.create(
         stage=stage,
@@ -80,4 +79,5 @@ def save_step(request, stage):
     new_step.save()
 
     # TODO Check it's redirecting to correct page
-    return JsonResponse({ "redirect": "/" })
+    print('redirecting')
+    return JsonResponse({"redirect": "/"})

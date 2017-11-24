@@ -26,7 +26,10 @@ class Step(models.Model):
     result = pgfields.ArrayField(models.TextField(), default=[])
     parent_step = models.ForeignKey('self', null=True)
 
-    def to_json(self):
+    def to_dict(self):
         """Return id and result in json format. Used in template"""
-        return json.dumps({
-            'id': self.id, 'result': self.result, 'parent_id': self.parent_step_id })
+        return {
+            'id': self.id,
+            'result': self.result,
+            'sentence_id': self.sentence_id
+        }
