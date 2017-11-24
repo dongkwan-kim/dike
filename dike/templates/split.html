@@ -68,6 +68,24 @@
     }
     */
 
+    function splitSentence(chars, markedPoints) {
+        var sentences = [];
+        var currentSentence = "";
+        for (var i = 0; i < chars.length; i++) {
+            var char = chars[i];
+            if (char.type === 'space')
+                currentSentence += ' '
+            else
+                currentSentence += char.text;
+            if (markedPoints.indexOf(i) !== -1) {
+                sentences.push(currentSentence);
+                currentSentence = "";
+            }
+        }
+        sentences.push(currentSentence)
+        return sentences
+    }
+
     var Splitter = {
         template: '#splitter',
         props: { sentence: Object },
@@ -86,23 +104,22 @@
                     this.splitPoints.push(pos)
                 else
                     this.splitPoints.splice(index, 1)
-                console.log(this.splitPoints)
             },
             submit: function() {
-                var splitted = []
-                var current = []
-                var words = this.sampleSentence.text.split(' ')
-                for (var i = 0; i < words; i++) {
-                    current.append(words[i])
-                    if (this.splitPoints.includes(i))
-                        splitted.append(current.join(" "))
-                        current = []
-                }
+                var payload = {
+                    sentence_id: this.sentence.id,
+                    result: splitSentence(this.chars, this.splitPoints)
+                };
                 //TODO: AJAX POST using django's token
-                postToDjango({
-                    sentences: splitted,
-                    parent: this.sentence.id,
-                    splitPoints: this.splitPoints,
+                $.ajax({
+                    type: 'POST',
+                    url: '/step/0/',
+                    data: JSON.stringify(payload),
+                    success: function(data) {
+                        debugger;
+                        console.log(data)
+                        window.location.href = data.redirect;
+                    }
                 })
             }
         },
