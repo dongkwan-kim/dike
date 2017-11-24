@@ -55,9 +55,15 @@ def get_explainer(request, step_id):
     return render(request, 'explain.html', {'json_resp': json.dumps(parent_step)})
 
 
-def get_voter(request, step_id1, step_id2):
+def get_voter(request):
+    if request.method == "POST":
+        return save_vote(request)
+    step1_id = int(request.GET['step1'])
+    step2_id = int(request.GET['step2'])
+    step1 = Step.objects.get(id=step1_id).to_dict()
+    step2 = Step.objects.get(id=step2_id).to_dict()
     # TODO use model and split numbers
-    return render(request, 'vote.html')
+    return render(request, 'vote.html', {'step1': step1, 'step2': step2 })
 
 
 def save_step(request, stage):
@@ -79,5 +85,13 @@ def save_step(request, stage):
     new_step.save()
 
     # TODO Check it's redirecting to correct page
-    print('redirecting')
+    return JsonResponse({"redirect": "/"})
+
+
+def save_vote(request):
+    payloads = json.loads(request.body)
+    chosen_step_id = payloads['step_id']
+    print(chosen_step_id)
+    Step.objects.get(id=chosen_step_id).do_vote()
+    # TODO Check it's redirecting to correct page
     return JsonResponse({"redirect": "/"})

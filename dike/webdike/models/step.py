@@ -33,3 +33,8 @@ class Step(models.Model):
             'result': self.result,
             'sentence_id': self.sentence_id
         }
+
+    def do_vote(self):
+        """Increase vote count 1"""
+        self.vote += 1
+        self.save()
