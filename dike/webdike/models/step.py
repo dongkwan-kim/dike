@@ -24,7 +24,7 @@ class Step(models.Model):
     )
     sentence = models.ForeignKey(Sentence)
     vote = models.IntegerField(default=1)
-    population =models.FloatField(default=1)
+    population =models.FloatField(default=2)
     result = pgfields.ArrayField(models.TextField(), default=[])
     parent_step = models.ForeignKey('self', null=True)
 
@@ -88,6 +88,9 @@ class Step(models.Model):
 
         # Get total voting counts of that generation, tv
         tv = Step.objects.filter(stage=self.stage).count()
+
+        if K is 0 or tv is 0:
+            print('000')
 
         # Return K * v/tv
         return K * v/tv

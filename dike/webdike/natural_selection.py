@@ -29,7 +29,7 @@ Scenenario
 
 # We can manipulate this value for our purpose.
 # Carrying capacity of the environment.
-K = 3
+K = 8
 
 
 def get_work_routing_info(sid):
@@ -63,7 +63,7 @@ def get_work_routing_info(sid):
         votable, creatable = (False, True)
     elif g >= 1 and TN < K:
         votable, creatable = (True, True)
-    elif g >= 1 and TN > K:
+    elif g >= 1 and TN >= K:
         votable, creatable = (True, False)
 
     # Make step_list
