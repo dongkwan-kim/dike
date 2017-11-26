@@ -8,29 +8,33 @@
 {% verbatim %}
 <template id='viewer'>
     <div>
-        <h3>
+        <h3 style="text-align: center">
             {{ judgement.title }}
         </h3>
         <blockquote>
             {{ judgement.desc }}
         </blockquote>
-        <div :style="viewerStyle">
+        <div :style="viewerStyle" class="flow-text">
             <a v-for="s in judgement.sentences" :href="`/sentence/${s.id}`">
-                <p>{{s.text}}</p>
+                <p class="sentence">{{s.text}}</p>
             </a>
         </div>
     </div>
 </template>
 {% endverbatim %}
 
-<script src="/static/js/constants.js"></script>
+<style>
+.sentence {
+    font-size: smaller;
+}
+
+.sentence:hover {
+    background-color: #e2f6ff;
+}
+</style>
+
 <script>
     var sampleJudgement = {{ json_resp|safe }}
-    // var sampleJudgement = {
-    //     title: "기성회비 반환",
-    //     desc: "[서울중앙지법 2014.5.23, 선고, 2014가합3141, 판결 : 항소]",
-    //     sentences: sampleParsedJudgementText,
-    // }
 
     Vue.component('viewer-component', {
         template: '#viewer',
