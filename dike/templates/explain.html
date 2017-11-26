@@ -13,7 +13,7 @@
     </span>
 </div>
 <div id="app">
-    <explain-component :sentence="connectedSentence"></explain-component>
+    <explain-component :prevstep="connectedSentence"></explain-component>
 </div>
 
 {% verbatim %}
@@ -44,21 +44,39 @@
 <script>
 var Explain = {
     template: '#explain-template',
-    props: { sentence: Object },
+    props: { prevstep: Object },
     data: function() {
         return {
-            phrases: this.sentence.phrases.map(p => ({
+            phrases: this.prevstep.result.map(p => ({
                 before: p,
                 after: p
             }))
         }
+    },
+    methods: {
+        submit: function() {
+            var payload = {
+                sentence_id: this.prevstep.sentence_id,
+                parent_step_id: this.prevstep.id,
+                result: this.phrases.map(p => p.after)
+            }
+            $.ajax({
+                type: 'POST',
+                url: '/step/3/',
+                data: JSON.stringify(payload),
+                success: function(data) {
+                    window.location.href = data.redirect
+                }
+            })
+        }
     }
 }
 
+var step2edit = {{ json_resp|safe }}
 new Vue({
     el: '#app',
     components: { 'explain-component': Explain },
-    data: { connectedSentence: sampleSplittedSentence },
+    data: { connectedSentence: step2edit },
 })
 </script>
 

@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^editor/polish/([\d]+)/', view.get_polisher),
     url(r'^editor/connect/([\d]+)/', view.get_connector),
     url(r'^editor/explain/([\d]+)/', view.get_explainer),
-    url(r'^vote/([\d]+)/([\d]+)/', view.get_voter),
+    url(r'^vote$', view.get_voter),
+    url(r'^step/([\d]+)/', view.save_step),
     url(r'^accounts/', include('allauth.urls'))
 ]

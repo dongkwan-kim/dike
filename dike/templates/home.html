@@ -4,7 +4,6 @@
 <h1 class="header center light flow-text">
     Dike는 크라우드소싱을 통해서 판결문을 읽기 쉽게 만들어주는 플랫폼입니다.
 </h1>
-
 <div class="row">
     <div class="col m8 offset-m2 s12">
         <div id="app">
@@ -37,20 +36,21 @@
 
 <script>
     // Fill json string using django
-    var sample_list = [{
-            'id': 1,
-            'title': '기성회비 반환'
-        },
-        {
-            'id': 2,
-            'title': '삼성 전환사채'
-        }
-    ]
+    var judgements = {{ json_resp|safe }}
+    // var sample_list = [{
+    //         'id': 1,
+    //         'title': '기성회비 반환'
+    //     },
+    //     {
+    //         'id': 2,
+    //         'title': '삼성 전환사채'
+    //     }
+    // ]
 
     Vue.component('list-component', {
         template: '#list',
         data: () => ({
-            judgements: sample_list
+            judgements: judgements
         }),
     })
 
