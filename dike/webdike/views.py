@@ -1,7 +1,11 @@
 from django.shortcuts import render
 from django.http import Http404, JsonResponse
 import json
-from webdike.models import *
+from .models import *
+
+
+def about(request):
+    return render(request, 'about.html')
 
 
 def base(request):
@@ -55,17 +59,6 @@ def get_explainer(request, step_id):
     return render(request, 'explain.html', {'json_resp': json.dumps(parent_step)})
 
 
-def get_voter(request):
-    if request.method == "POST":
-        return save_vote(request)
-    step1_id = int(request.GET['step1'])
-    step2_id = int(request.GET['step2'])
-    step1 = Step.objects.get(id=step1_id).to_dict()
-    step2 = Step.objects.get(id=step2_id).to_dict()
-    # TODO use model and split numbers
-    return render(request, 'vote.html', {'step1': step1, 'step2': step2 })
-
-
 def save_step(request, stage):
     payloads = json.loads(request.body)
     parent_step_id = payloads.get("parent_step_id", None)
@@ -80,12 +73,27 @@ def save_step(request, stage):
         sentence_id = payloads["sentence_id"]
     )
     if parent_step_id:
-        print(parent_step_id)
         new_step.parent_step_id = parent_step_id
     new_step.save()
 
     # TODO Check it's redirecting to correct page
     return JsonResponse({"redirect": "/"})
+
+
+def handle_vote(request):
+    if request.method == "POST":
+        return save_vote(request)
+    else:
+        return get_vote(request)
+
+
+def get_vote(request):
+    step1_id = int(request.GET['step1'])
+    step2_id = int(request.GET['step2'])
+    step1 = Step.objects.get(id=step1_id).to_dict()
+    step2 = Step.objects.get(id=step2_id).to_dict()
+    # TODO use model and split numbers
+    return render(request, 'vote.html', {'step1': step1, 'step2': step2 })
 
 
 def save_vote(request):

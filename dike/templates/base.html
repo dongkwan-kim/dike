@@ -19,27 +19,27 @@
     <body>
         <nav>
             <div class="nav-wrapper">
-                <a href="#" class="brand-logo">
+                <a href="/" class="brand-logo">
                     <img src="{% static "img/dikelogo.png" %}">
                 </a>
-                <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+                <a href="/" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
                 <ul class="right hide-on-med-and-down">
                     {% if user.is_authenticated %}
                         <li>Welcome {{ user.get_full_name }}</li>
-                        <li><a href="about.html">About</a></li>
+                        <li><a href="/about">About</a></li>
                         <li><a href="/accounts/logout">Logout</a></li>
                     {% else %}
-                        <li><a href="about.html">About</a></li>
+                        <li><a href="/about">About</a></li>
                         <li><a href="/accounts/login">Login</a></li>
                     {% endif %}
                 </ul>
                 <ul class="side-nav" id="mobile-demo">
                     {% if user.is_authenticated %}
                         <li>Welcome {{ user.get_username }}</li>
-                        <li><a href="about.html">About</a></li>
+                        <li><a href="/about">About</a></li>
                         <li><a href="/accounts/logout">Logout</a></li>
                     {% else %}
-                        <li><a href="about.html">About</a></li>
+                        <li><a href="/about">About</a></li>
                         <li><a href="/accounts/login">Login</a></li>
                     {% endif %}
                 </ul>
