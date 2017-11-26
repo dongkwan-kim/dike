@@ -46,23 +46,48 @@ class Step(models.Model):
 
         The equation is dN/dt = r(v) * N * (1 - N/K).
 
-        :param K: carrying capacity
+        :param K: total carrying capacity
         :return: float
         """
         # Get maximum growth rate, r(v),
+        rv = self.get_max_growth_rate()
+
+        # Get carrying capacity, k(v, K),
+        k = self.get_carrying_capacity(K)
 
         # Return r(v) * N * (1 - N/K)
-
+        N = self.population
+        return rv * N * (1 - N/k)
 
     def get_max_growth_rate(self):
-        """Get maximum growth rate of given Step.
+        """Get maximum growth rate.
 
         :return: float
         """
 
         # Get voting counts of Step, v
+        v = self.vote
 
         # Get total voting counts of that generation, tv
+        tv = Step.objects.filter(stage=self.stage).count()
 
         # Return a * v/tv (temporarily a = 2)
+        a = 2
+        return a * v/tv
+
+    def get_carrying_capacity(self, K):
+        """Get carrying capacity.
+
+        :param K: total carrying capacity
+        :return: float
+        """
+
+        # Get voting counts of Step, v
+        v = self.vote
+
+        # Get total voting counts of that generation, tv
+        tv = Step.objects.filter(stage=self.stage).count()
+
+        # Return K * v/tv
+        return K * v/tv
 
