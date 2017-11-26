@@ -7,11 +7,11 @@
     <li class="waves-effect disabled"><a href="#!">연결하기</a></li>
     <li class="waves-effect disabled"><a href="#!">교정하기</a></li>
 </ul>
-<div class="card-panel teal">
-    <span class="white-text">
-        잘려져있는 글조각들을 각각 완성된 문장으로 바꿔주세요
-    </span>
-</div>
+
+<h5 class="header lighter" style="line-height: 1.4;">
+    잘려져있는 글조각들을 각각 완성된 문장으로 바꿔주세요
+</h5>
+
 <div id="app">
     <polish-component :prevstep="splittedStep"></polish-component>
 </div>
@@ -19,17 +19,18 @@
 {% verbatim %}
 <template id="polish-template">
 <div>
-    <div v-for="p in phrases" class="row">
-        <div class="col s6 original">
-            <span>{{p.before}}</span>
-        </div>
-        <div class="input-field col s6">
-            <textarea class="materialize-textarea" v-model="p.after"></textarea>
+    <div class="card-panel grey lighten-5">
+        <div v-for="p in phrases" class="row">
+            <div class="col s6 original">
+                <span>{{p.before}}</span>
+            </div>
+            <div class="input-field col s6">
+                <textarea class="materialize-textarea" v-model="p.after"></textarea>
+            </div>
         </div>
     </div>
-
     <button class="btn waves-effect waves-light" type="submit" name="action" v-on:click="submit()">Submit
-            <i class="material-icons right">send</i>
+        <i class="material-icons right">send</i>
     </button>
 </div>
 </template>
