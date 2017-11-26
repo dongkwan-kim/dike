@@ -49,19 +49,21 @@ def get_work_routing_info(sid):
     # Find Step from sid
     step = Step.objects.get(id=sid)
 
-    # Count TN, the number of Step instances w/ *next stage*
+    # Count g, the number of Step instances w/ *next stage*
+    # Count TN, total populations of Step instances w/ *next stage*
     current_stage = int(step.stage)
     next_stage = current_stage + 1
     steps = step.step_set.all()
+    g = steps.count()
     TN = sum([x.population for x in steps])
 
     # Determine votable, creatable
-    if TN < 1:
+    # Alternative way: creatable = True always
+    if g < 1:
         votable, creatable = (False, True)
-    elif 1 <= TN < K:
+    elif g >= 1 and TN < K:
         votable, creatable = (True, True)
-    else:
-        # If TN >= K
+    elif g >= 1 and TN > K:
         votable, creatable = (True, False)
 
     # Make step_list
