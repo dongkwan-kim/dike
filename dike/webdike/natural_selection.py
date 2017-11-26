@@ -23,18 +23,13 @@ Scenenario
 1. When the user calls get_work_routing_info, one time unit starts.
 2. In this time unit, the user votes or creates a Step or does both.
 3. After this, with voting counts at that moment,
-   dN/dt of Steps will grow, c of Steps will die.
-
+   |dN/dt| of Steps will grow (>0) or die (<0).
 
 """
 
 # We can manipulate this value for our purpose.
-
 # Carrying capacity of the environment.
 K = 10
-
-# Death rate.
-c = 0.1
 
 
 def get_work_routing_info(sid):
@@ -52,43 +47,60 @@ def get_work_routing_info(sid):
     """
 
     # Find Step from sid
+    step = Step.objects.get(id=sid)
 
-    # Count TN, the number of Step instances w/ *next state*
-
+    # Count TN, the number of Step instances w/ *next stage*
+    current_stage = int(step.stage)
+    next_stage = current_stage + 1
+    steps = sentence.step_set.filter(stage=next_stage)
+    TN = steps.count()
 
     # Determine votable, creatable
-
-    # If TN < 1
-    #   votable: False, creatable: True
-
-    # If 1 <= TN < K
-    #   votable: True, creatable: True
-
-    # If TN >= K
-    #   votable: True, creatable: False
-
+    if TN < 1:
+        votable, creatble = (False, True)
+    elif 1 <= TN < K:
+        votable, creatble = (True, True)
+    else:
+        # If TN >= K
+        votable, creatble = (True, False)
 
     # Make step_list
+    if votable:
+        # step_list = list of Steps (next_stage) in descending order by votes
+        step_list = list(steps.order_by('-population'))
+    else:
+        step_list = None
 
-    # If votable == True
-    #   step_list = list of Steps (state_next) in descending order by votes
-
-    # If votable == False
-    #   step_list = None
-
-
-    # Return dictionary
+    return {
+        'votable': votable,
+        'creatable': creatable,
+        'step_list': step_list,
+    }
 
 
-def change_populations():
-    """Make Steps grow and die.
+def change_populations(target_stage):
+    """Steps wil grow or die.
 
-    dN/dt of Steps will grow, c of Steps will die.
+    |dN/dt| of Steps will grow (>0) or die (<0).
+
+    :param target_stage: integer
     :return: Boolean whether the total population is greater or equal to K.
     """
 
-    # In iterations of all Steps,
-    # Add dN/dt, substract c to Step.population
+    TN = 0
 
-    # return TN >= K
+    # In iterations of Steps whose stage is target_stage
+    # Add dN/dt to Step.population
+    current_steps = Step.objects.filter(stage=target_stage)
+    for step in current_steps:
+        N = step.population
+        N += step.get_growth_rate(K)
+        if N < 0:
+            N = 0
+
+        step.population = N
+        step.save()
+        TN += N
+
+    return TN >= K
 
