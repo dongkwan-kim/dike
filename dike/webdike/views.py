@@ -34,13 +34,9 @@ def get_judgement(request, jnum):
     return render(request, 'judgement.html', {'json_resp': json.dumps(resp)})
 
 
-def get_splitter(request, sentence_id):
-    sentence = Sentence.objects.get(id=sentence_id)
-    resp = {
-        'id': sentence.id,
-        'text': sentence.content,
-    }
-    return render(request, 'split.html', {'json_resp': json.dumps(resp)})
+def get_splitter(request, step_id):
+    parent_step = Step.objects.get(id=step_id).to_dict()
+    return render(request, 'split.html', {'json_resp': json.dumps(parent_step)})
 
 
 def get_polisher(request, step_id):
@@ -60,6 +56,9 @@ def get_explainer(request, step_id):
 
 
 def save_step(request, stage):
+    if stage not in range(1, 4):
+        raise Http404("Invalid stage number")
+
     payloads = json.loads(request.body)
     parent_step_id = payloads.get("parent_step_id", None)
     try:

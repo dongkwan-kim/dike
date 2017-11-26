@@ -15,7 +15,7 @@
 </div>
 
 <div id="app">
-    <split-component :sentence="sentosplit"></split-component>
+    <split-component :step="prevstep"></split-component>
 </div>
 
 {% verbatim %}
@@ -50,17 +50,22 @@
 
 .splitmark.marked {
     background-color: orange;
+    opacity: 0.7;
 }
 
 .splitmark:hover {
     background-color: orange;
     opacity: 0.3;
 }
+
+.splitmark.marked:hover {
+    opacity: 1;
+}
 </style>
 
 <script src="/static/js/constants.js"></script>
 <script>
-    var sentence2edit = {{ json_resp|safe }}
+    var prevStep = {{ json_resp|safe }}
     /*
     var sentence2edit = {
         id: 1,
@@ -88,10 +93,10 @@
 
     var Splitter = {
         template: '#splitter',
-        props: { sentence: Object },
+        props: { step: Object },
         data: function () {
             return {
-                chars: this.sentence.text.split(' ').reduce((acc, cur, index) => {
+                chars: this.step.result[0].split(' ').reduce((acc, cur, index) => {
                     return acc.concat([{ type: 'word', text: cur }, { type: 'space', text: '_', index } ])
                 }, []),
                 splitPoints: [],
@@ -107,17 +112,15 @@
             },
             submit: function() {
                 var payload = {
-                    sentence_id: this.sentence.id,
+                    sentence_id: this.step.sentence_id,
+                    parent_step_id: this.step.id,
                     result: splitSentence(this.chars, this.splitPoints)
                 };
-                //TODO: AJAX POST using django's token
                 $.ajax({
                     type: 'POST',
-                    url: '/step/0/',
+                    url: '/step/1/',
                     data: JSON.stringify(payload),
                     success: function(data) {
-
-                        console.log(data)
                         window.location.href = data.redirect;
                     }
                 })
@@ -131,7 +134,7 @@
             'split-component': Splitter,
         },
         data: {
-            sentosplit: sentence2edit
+            prevstep: prevStep
         }
     })
 </script>
