@@ -6,11 +6,13 @@ from .sentence import Sentence
 
 
 class Step(models.Model):
-    SPLITTED = 0
-    POLISHED = 1
-    CONNECTED = 2
-    EXPLAINED = 3
+    IMPORTED = 0
+    SPLITTED = 1
+    POLISHED = 2
+    CONNECTED = 3
+    EXPLAINED = 4
     STAGE_CHOICES = (
+        (IMPORTED, 'Imported'),
         (SPLITTED, 'Splitted'),
         (POLISHED, 'Polished'),
         (CONNECTED, 'Connected'),
@@ -22,7 +24,7 @@ class Step(models.Model):
     )
     sentence = models.ForeignKey(Sentence)
     vote = models.IntegerField(default=0)
-    active = models.BooleanField(default=False)
+    population =models.FloatField(default=1)
     result = pgfields.ArrayField(models.TextField(), default=[])
     parent_step = models.ForeignKey('self', null=True)
 

@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand, CommandError
-from webdike.models import Document, Sentence
+from ...models import Document, Sentence, Step
 
 class Command(BaseCommand):
     help = "Create sentences for a judgement.\
@@ -23,3 +23,10 @@ class Command(BaseCommand):
                 document=parent_doc,
                 )
             new_sentence.save()
+
+            new_step = Step.objects.create(
+                stage=Step.IMPORTED,
+                sentence=new_sentence,
+                result=[line],
+            )
+            new_step.save()
