@@ -14,3 +14,8 @@ class Sentence(models.Model):
 
     def __str__(self):
         return "{} {:>4} {}".format(self.document.id, self.id, self.content[:10])
+
+    def add_hit(self):
+        self.hit += 1
+        self.save()
+

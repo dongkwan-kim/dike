@@ -21,6 +21,7 @@ urlpatterns = [
     url(r'^about/', view.about),
     url(r'^admin/', admin.site.urls),
     url(r'^base/', view.base),
+    url(r'^stats/([\d]+)/', view.get_stats),
     url(r'^$', view.home),
     url(r'^judgement/([\d]+)/', view.get_judgement),
     url(r'^sentence/([\d]+)/', view.get_sentence),
