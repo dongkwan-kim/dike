@@ -9,11 +9,11 @@
 </ul>
 <div class="card-panel teal">
     <span class="white-text">
-        잘려져있는 단어들을 완성된 문장으로 바꿔주세요
+        잘려져있는 글조각들을 각각 완성된 문장으로 바꿔주세요
     </span>
 </div>
 <div id="app">
-    <polish-component :splittedsentences="splittedSentence"></polish-component>
+    <polish-component :prevstep="splittedStep"></polish-component>
 </div>
 
 {% verbatim %}
@@ -44,21 +44,38 @@
 <script>
 var Polisher = {
     template: '#polish-template',
-    props: { splittedsentences: Object },
+    props: { prevstep: Object },
     data: function() {
         return {
-            phrases: this.splittedsentences.phrases.map(p => ({
+            phrases: this.prevstep.result.map(p => ({
                 before: p,
                 after: p
             }))
         }
+    },
+    methods: {
+        submit: function() {
+            var payload = {
+                sentence_id: this.prevstep.sentence_id,
+                parent_step_id: this.prevstep.id,
+                result: this.phrases.map(p => p.after)
+            };
+            $.ajax({
+                type: 'POST',
+                url: '/step/1/',
+                data: JSON.stringify(payload),
+                success: function(data) {
+                    window.location.href = data.redirect;
+                }
+            })
+        }
     }
 }
-
+var step2edit = {{ json_resp|safe }}
 new Vue({
     el: '#app',
     components: { 'polish-component': Polisher },
-    data: { splittedSentence: sampleSplittedSentence},
+    data: {splittedStep: step2edit},
 })
 
 </script>

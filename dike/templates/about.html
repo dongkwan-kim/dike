@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1 class="header center light flow-text">
+        Dike는 어렵게 쓰여진 판결문을 크라우드소싱을 통해 일반인도 읽기 쉽게 만들어주는 플랫폼입니다.
+    </h1>
+    <h1 class="header center light flow-text">
+        Dike는 총 4단계를 거쳐서 판결문을 쉽게 바꿉니다.
+    </h1>
+    <ul class="collapsible" data-collapsible="accordion">
+        <li>
+            <div class="collapsible-header">
+                1. 나누기
+            </div>
+            <div class="collapsible-body">
+                <span>Lorem ipsum dolor sit amet.</span>
+            </div>
+        </li>
+        <li>
+            <div class="collapsible-header">
+                2. 다듬기
+            </div>
+            <div class="collapsible-body">
+                <span>Lorem ipsum dolor sit amet.</span>
+            </div>
+        </li>
+        <li>
+            <div class="collapsible-header">
+                3. 잇기
+            </div>
+            <div class="collapsible-body">
+                <span>Lorem ipsum dolor sit amet.</span>
+            </div>
+        </li>
+        <li>
+            <div class="collapsible-header"> 4. 설명하기</div>
+            <div class="collapsible-body">
+                <span>Lorem ipsum dolor sit amet.</span>
+            </div>
+        </li>
+    </ul>
+
+    <script>
+        $(document).ready(function () {
+            $('.collapsible').collapsible();
+        });
+    </script>
+{% endblock %}

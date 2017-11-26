@@ -10,5 +10,7 @@ class Sentence(models.Model):
     hit = models.IntegerField(default=0)
 
     document = models.ForeignKey(Document)
-    parent = models.ForeignKey('self')
+    parent = models.ForeignKey('self', null=True)
 
+    def __str__(self):
+        return "{} {:>4} {}".format(self.document.id, self.id, self.content[:10])

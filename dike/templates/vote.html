@@ -8,8 +8,8 @@
 </div>
 <div id="app">
     <vote-component
-    :sentence1="sentenceA"
-    :sentence2="sentenceB"
+    :step1="step1"
+    :step2="step2"
     ></vote-component>
 </div>
 
@@ -21,7 +21,7 @@
                 <input type="radio" id="one" value="left" v-model="selected" />
                 <label for="one">첫번째 분할</label>
             </p>
-            <p v-for="p in sentence1.phrases">
+            <p v-for="p in step2.result">
                 {{p}}
             </p>
         </div>
@@ -30,7 +30,7 @@
                 <input type="radio" id="second" value="right" v-model="selected"/>
                 <label for="second">두번째 분할</label>
             </p>
-            <p v-for="p in sentence2.phrases">
+            <p v-for="p in step1.result">
                 {{p}}
             </p>
         </div>
@@ -45,22 +45,38 @@
 var Voter = {
     template: '#vote-template',
     props: {
-        sentence1: Object,
-        sentence2: Object,
+        step1: Object,
+        step2: Object,
     },
     data: function() { return {
-        choices: [this.sentence1, this.sentence2],
         selected: "left",
-    }}
+    }},
+    methods: {
+        submit: function() {
+            var payload = {
+                step_id: this.selected === "left" ? this.step1.id : this.step2.id
+            }
+            $.ajax({
+                type: 'POST',
+                url: '/vote',
+                data: JSON.stringify(payload),
+                success: function(data) {
+                    window.location.href = data.redirect
+                }
+            })
+        }
+    }
 }
 
+var step1 = {{ step1|safe }}
+var step2 = {{ step2|safe }}
 new Vue({
     el: '#app',
     components: { 'vote-component': Voter },
     data: {
-        sentenceA: sampleSplittedSentence,
-        sentenceB: sampleSplittedSentence
-    },
+        step1: step1,
+        step2: step2
+    }
 })
 </script>
 {% endblock %}

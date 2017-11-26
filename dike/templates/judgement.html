@@ -25,11 +25,12 @@
 
 <script src="/static/js/constants.js"></script>
 <script>
-    var sampleJudgement = {
-        title: "기성회비 반환",
-        desc: "[서울중앙지법 2014.5.23, 선고, 2014가합3141, 판결 : 항소]",
-        sentences: sampleParsedJudgementText,
-    }
+    var sampleJudgement = {{ json_resp|safe }}
+    // var sampleJudgement = {
+    //     title: "기성회비 반환",
+    //     desc: "[서울중앙지법 2014.5.23, 선고, 2014가합3141, 판결 : 항소]",
+    //     sentences: sampleParsedJudgementText,
+    // }
 
     Vue.component('viewer-component', {
         template: '#viewer',
