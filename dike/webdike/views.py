@@ -4,6 +4,10 @@ import json
 from .models import *
 
 
+def about(request):
+    return render(request, 'about.html')
+
+
 def base(request):
     return render(request, 'base.html')
 

@@ -18,6 +18,7 @@ from django.contrib import admin
 from webdike import views as view
 
 urlpatterns = [
+    url(r'^about/', view.about),
     url(r'^admin/', admin.site.urls),
     url(r'^base/', view.base),
     url(r'^$', view.home),
