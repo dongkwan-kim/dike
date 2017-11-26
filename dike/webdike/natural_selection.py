@@ -33,7 +33,7 @@ Scenenario
 # Carrying capacity of the environment.
 K = 10
 
-# Death rate.
+# Death counts.
 c = 0.1
 
 
@@ -52,32 +52,35 @@ def get_work_routing_info(sid):
     """
 
     # Find Step from sid
+    step = Step.objects.get(id=sid)
 
-    # Count TN, the number of Step instances w/ *next state*
-
+    # Count TN, the number of Step instances w/ *next stage*
+    current_stage = int(step.stage)
+    next_stage = current_stage + 1
+    steps = sentence.step_set.filter(stage=next_stage)
+    TN = steps.count()
 
     # Determine votable, creatable
-
-    # If TN < 1
-    #   votable: False, creatable: True
-
-    # If 1 <= TN < K
-    #   votable: True, creatable: True
-
-    # If TN >= K
-    #   votable: True, creatable: False
-
+    if TN < 1:
+        votable, creatble = (False, True)
+    elif 1 <= TN < K:
+        votable, creatble = (True, True)
+    else:
+        # If TN >= K
+        votable, creatble = (True, False)
 
     # Make step_list
+    if votable:
+        # step_list = list of Steps (next_stage) in descending order by votes
+        step_list = list(steps.order_by('-population'))
+    else:
+        step_list = None
 
-    # If votable == True
-    #   step_list = list of Steps (state_next) in descending order by votes
-
-    # If votable == False
-    #   step_list = None
-
-
-    # Return dictionary
+    return {
+        'votable': votable,
+        'creatable': creatable,
+        'step_list': step_list,
+    }
 
 
 def change_populations():
