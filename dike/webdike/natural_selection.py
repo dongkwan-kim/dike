@@ -23,18 +23,13 @@ Scenenario
 1. When the user calls get_work_routing_info, one time unit starts.
 2. In this time unit, the user votes or creates a Step or does both.
 3. After this, with voting counts at that moment,
-   dN/dt of Steps will grow, c of Steps will die.
-
+   |dN/dt| of Steps will grow (>0) or die (<0).
 
 """
 
 # We can manipulate this value for our purpose.
-
 # Carrying capacity of the environment.
 K = 10
-
-# Death counts.
-c = 0.1
 
 
 def get_work_routing_info(sid):
@@ -83,15 +78,29 @@ def get_work_routing_info(sid):
     }
 
 
-def change_populations():
-    """Make Steps grow and die.
+def change_populations(target_stage):
+    """Steps wil grow or die.
 
-    dN/dt of Steps will grow, c of Steps will die.
+    |dN/dt| of Steps will grow (>0) or die (<0).
+
+    :param target_stage: integer
     :return: Boolean whether the total population is greater or equal to K.
     """
 
-    # In iterations of all Steps,
-    # Add dN/dt, substract c to Step.population
+    TN = 0
 
-    # return TN >= K
+    # In iterations of Steps whose stage is target_stage
+    # Add dN/dt to Step.population
+    current_steps = Step.objects.filter(stage=target_stage)
+    for step in current_steps:
+        N = step.population
+        N += step.get_growth_rate(K)
+        if N < 0:
+            N = 0
+
+        step.population = N
+        step.save()
+        TN += N
+
+    return TN >= K
 
