@@ -8,11 +8,10 @@
     <li class="waves-effect disabled"><a href="#!">교정하기</a></li>
 </ul>
 
-<div class="card-panel teal">
-    <span class="white-text">
-        긴 문장을 적절한 길이로 나누어 주세요. 단어와 단어 사이를 클릭하면 문장이 나누어집니다.
-    </span>
-</div>
+<h5 class="header lighter" style="line-height: 1.4;">
+    긴 문장을 적절한 길이로 나누어 주세요. <br/>
+    단어와 단어 사이를 클릭하면 문장이 나누어집니다.
+</h5>
 
 <div id="app">
     <split-component :step="prevstep"></split-component>
@@ -21,11 +20,9 @@
 {% verbatim %}
 <template id='splitter'>
 <div>
-    <div>
+    <div class="flow-text card-panel grey lighten-5">
         <span v-for="c in chars">
-            <span v-if="c.type === 'word'">
-                {{c.text}}
-            </span>
+            <span v-if="c.type === 'word'">{{c.text}}</span>
             <span
                 v-else
                 class="splitmark"

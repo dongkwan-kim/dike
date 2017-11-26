@@ -7,11 +7,11 @@
     <li class="active"><a href="#!">연결하기</a></li>
     <li class="waves-effect disabled"><a href="#!">교정하기</a></li>
 </ul>
-<div class="card-panel teal">
-    <span class="white-text">
-        문장들을 다듬어 문장들이 서로 연결되어 읽히게 고쳐주세요
-    </span>
-</div>
+
+<h5 class="header lighter" style="line-height: 1.4;">
+    문장들을 다듬어 문장들이 서로 연결되어 읽히게 고쳐주세요
+</h5>
+
 <div id="app">
     <connect-component :prevstep="parentstep"></connect-component>
 </div>
@@ -19,12 +19,14 @@
 {% verbatim %}
 <template id="connect-template">
 <div>
-    <div v-for="p in phrases" class="row">
-        <div class="col s6 original">
-            <span>{{p.before}}</span>
-        </div>
-        <div class="input-field col s6">
-            <textarea class="materialize-textarea" v-model="p.after"></textarea>
+    <div class="card-panel grey lighten-5">
+        <div v-for="p in phrases" class="row">
+            <div class="col s6 original">
+                <span>{{p.before}}</span>
+            </div>
+            <div class="input-field col s6">
+                <textarea class="materialize-textarea" v-model="p.after"></textarea>
+            </div>
         </div>
     </div>
 
