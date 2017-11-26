@@ -29,7 +29,7 @@ Scenenario
 
 # We can manipulate this value for our purpose.
 # Carrying capacity of the environment.
-K = 10
+K = 3
 
 
 def get_work_routing_info(sid):
@@ -52,17 +52,17 @@ def get_work_routing_info(sid):
     # Count TN, the number of Step instances w/ *next stage*
     current_stage = int(step.stage)
     next_stage = current_stage + 1
-    steps = sentence.step_set.filter(stage=next_stage)
-    TN = steps.count()
+    steps = step.step_set.all()
+    TN = sum([x.population for x in steps])
 
     # Determine votable, creatable
     if TN < 1:
-        votable, creatble = (False, True)
+        votable, creatable = (False, True)
     elif 1 <= TN < K:
-        votable, creatble = (True, True)
+        votable, creatable = (True, True)
     else:
         # If TN >= K
-        votable, creatble = (True, False)
+        votable, creatable = (True, False)
 
     # Make step_list
     if votable:

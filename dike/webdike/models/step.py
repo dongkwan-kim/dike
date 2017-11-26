@@ -23,7 +23,7 @@ class Step(models.Model):
         choices=STAGE_CHOICES,
     )
     sentence = models.ForeignKey(Sentence)
-    vote = models.IntegerField(default=0)
+    vote = models.IntegerField(default=1)
     population =models.FloatField(default=1)
     result = pgfields.ArrayField(models.TextField(), default=[])
     parent_step = models.ForeignKey('self', null=True)
@@ -73,7 +73,8 @@ class Step(models.Model):
 
         # Return a * v/tv (temporarily a = 2)
         a = 2
-        return a * v/tv
+        # return a * v/tv
+        return 1
 
     def get_carrying_capacity(self, K):
         """Get carrying capacity.

@@ -1,7 +1,16 @@
 from django.shortcuts import render
-from django.http import Http404, JsonResponse
+from django.http import Http404, JsonResponse, HttpResponseRedirect
 import json
 from .models import *
+from .natural_selection import change_populations, get_work_routing_info
+
+
+STEP_TO_URL = {
+    '1': 'split',
+    '2': 'polish',
+    '3': 'connect',
+    '4': 'explain',
+}
 
 
 def about(request):
@@ -34,6 +43,18 @@ def get_judgement(request, jnum):
     return render(request, 'judgement.html', {'json_resp': json.dumps(resp)})
 
 
+def get_sentence(request, sentence_id):
+    step = Step.objects.filter(stage=0, sentence__id=sentence_id)[0]
+    todo = get_work_routing_info(step.id)
+    if todo['creatable']:
+        return HttpResponseRedirect('/editor/split/{}'.format(step.id))
+    elif todo['votable']:
+        step_list = todo["step_list"]
+        rest_list = step_list[2:]
+        return HttpResponseRedirect('/vote?step1={}&step2={}'
+                                    .format(step_list[0], step_list[1]))
+
+
 def get_splitter(request, step_id):
     parent_step = Step.objects.get(id=step_id).to_dict()
     return render(request, 'split.html', {'json_resp': json.dumps(parent_step)})
@@ -56,8 +77,10 @@ def get_explainer(request, step_id):
 
 
 def save_step(request, stage):
-    if stage not in range(1, 4):
+    if int(stage) not in range(1, 4):
         raise Http404("Invalid stage number")
+
+    print('save_step', stage)
 
     payloads = json.loads(request.body)
     parent_step_id = payloads.get("parent_step_id", None)
@@ -75,8 +98,22 @@ def save_step(request, stage):
         new_step.parent_step_id = parent_step_id
     new_step.save()
 
-    # TODO Check it's redirecting to correct page
-    return JsonResponse({"redirect": "/"})
+    if int(stage) == 4:
+        return JsonResponse({"redirect": '/'})
+
+    change_populations(new_step.stage)
+    todo = get_work_routing_info(new_step.id)
+    if todo['creatable']:
+        next_step = STEP_TO_URL[str(int(new_step.stage) + 1)]
+        next_url = '/editor/{}/{}'.format(
+            next_step, str(new_step.id))
+    else:  # todo['votable']:
+        step_list = todo["step_list"]
+        rest_list = step_list[2:]
+        next_url = '/vote?step1={}&step2={}&rest={}'.format(
+            step_list[0], step_list[1], rest_list)
+
+    return JsonResponse({"redirect": next_url})
 
 
 def handle_vote(request):

@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^base/', view.base),
     url(r'^$', view.home),
     url(r'^judgement/([\d]+)/', view.get_judgement),
+    url(r'^sentence/([\d]+)/', view.get_sentence),
     url(r'^editor/split/([\d]+)/', view.get_splitter),
     url(r'^editor/polish/([\d]+)/', view.get_polisher),
     url(r'^editor/connect/([\d]+)/', view.get_connector),
