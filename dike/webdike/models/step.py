@@ -40,3 +40,29 @@ class Step(models.Model):
         """Increase vote count 1"""
         self.vote += 1
         self.save()
+
+    def get_growth_rate(self, K):
+        """Get growth rate of Step who has given sid.
+
+        The equation is dN/dt = r(v) * N * (1 - N/K).
+
+        :param K: carrying capacity
+        :return: float
+        """
+        # Get maximum growth rate, r(v),
+
+        # Return r(v) * N * (1 - N/K)
+
+
+    def get_max_growth_rate(self):
+        """Get maximum growth rate of given Step.
+
+        :return: float
+        """
+
+        # Get voting counts of Step, v
+
+        # Get total voting counts of that generation, tv
+
+        # Return a * v/tv (temporarily a = 2)
+
