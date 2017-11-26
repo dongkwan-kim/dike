@@ -44,6 +44,9 @@ def get_judgement(request, jnum):
 
 
 def get_sentence(request, sentence_id):
+    sentence = Sentence.objects.get(id=sentence_id)
+    sentence.add_hit()
+
     step = Step.objects.filter(stage=0, sentence__id=sentence_id)[0]
     todo = get_work_routing_info(step.id)
     if todo['creatable']:
@@ -139,3 +142,15 @@ def save_vote(request):
     Step.objects.get(id=chosen_step_id).do_vote()
     # TODO Check it's redirecting to correct page
     return JsonResponse({"redirect": "/"})
+
+
+def get_stats(request, jnum):
+    doc = Document.objects.get(id=jnum)
+    sentences = Sentence.objects.filter(document__id=jnum)
+    resp = {
+        'title': doc.title,
+        'desc': doc.description,
+        'sentences': [{'id': s.id, 'text': s.content, 'hit': s.hit} for s in sentences]
+    }
+    return render(request, 'stats.html', {'json_resp': json.dumps(resp)})
+
