@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id="app">
+    <viewer-component></viewer-component>
+</div>
+
+{% verbatim %}
+<template id='viewer'>
+    <div>
+        <h3 style="text-align: center">
+            "{{ judgement.title }}"의 이해하기 어려운 문장
+        </h3>
+        <div class="row">
+            <div class="col s1 offset-s2 right-align" style="padding:5px;">hits</div>
+            <div class="col s6" :style="grad()">
+                <span>0</span>
+                <span style="float: right;">{{hitMax}}</span>
+            </div>
+        </div>
+
+        <blockquote>
+            {{ judgement.desc }}
+        </blockquote>
+        <div :style="viewerStyle">
+            <p :style="aStyle(s.hit)" v-for="s in judgement.sentences">
+                {{s.text}}
+            </p>
+        </div>
+    </div>
+</template>
+{% endverbatim %}
+
+
+<script>
+    var sampleJudgement = {{ json_resp|safe }}
+    // var sampleJudgement = {
+    //     title: "기성회비 반환",
+    //     desc: "[서울중앙지법 2014.5.23, 선고, 2014가합3141, 판결 : 항소]",
+    //     sentences: sampleParsedJudgementText,
+    // }
+
+    Vue.component('viewer-component', {
+        template: '#viewer',
+        data: function() {
+            return {
+                judgement: sampleJudgement,
+                viewerStyle: {
+                    lineHeight: 2,
+                }
+            }
+        },
+        computed: {
+            hitSum: function () {
+                var sum = 0;
+                for (var i = 0; i < this.judgement.sentences.length; i++) {
+                    sum += this.judgement.sentences[i].hit;
+                }
+                return sum;
+            },
+            hitMax: function () {
+                var max = -1;
+                for (var i = 0; i < this.judgement.sentences.length; i++) {
+                    var tmp = this.judgement.sentences[i].hit;
+                    if (max < tmp) {
+                        max = tmp;
+                    }
+                }
+                return max;
+            }
+        },
+        methods: {
+            aStyle: function (hit) {
+                var sum = this.hitSum;
+                return {
+                    backgroundColor: `rgba(239, 109, 115, ${(hit/sum)*0.5})`,
+                }
+            },
+            grad: function () {
+                var sum = this.hitSum;
+                var colorMax = `rgba(239, 109, 115, ${(this.hitMax/sum)*0.5})`
+                var r = {
+                    background: `linear-gradient(to right, white, ${colorMax})`,
+                    width: '50%',
+                    padding: '5px',
+                    border: '1px #ffc6c6 solid',
+                    margin: '0 auto 40px auto'
+                }
+                return r;
+            },
+        }
+    })
+
+    new Vue({
+        el: '#app',
+    })
+</script>
+
+{% endblock %}
