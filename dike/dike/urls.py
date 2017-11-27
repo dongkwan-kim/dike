@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^base/', view.base),
     url(r'^stats/([\d]+)/', view.get_stats),
+    url(r'^family/([\d]+)', view.get_family_tree),
     url(r'^$', view.home),
     url(r'^judgement/([\d]+)/', view.get_judgement),
     url(r'^judgement/watch/([\d]+)/', view.get_judgement_watch),

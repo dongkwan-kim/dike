@@ -170,3 +170,15 @@ def get_stats(request, jnum):
     }
     return render(request, 'stats.html', {'json_resp': json.dumps(resp)})
 
+
+def get_family_tree(request, step_id):
+    step_cursor = Step.objects.get(id=step_id)
+    stage = int(step_cursor.stage)
+
+    families = []
+    for i in range(stage + 1):
+        families.insert(0, step_cursor.to_dict())
+        step_cursor = step_cursor.parent_step
+
+    return JsonResponse({"family": json.dumps(families)})
+
