@@ -20,9 +20,9 @@
 <template id="polish-template">
 <div>
     <div class="card-panel grey lighten-5">
-        <div v-for="p in phrases" class="row">
+        <div v-for="p in phrases" class="row sentence">
             <div class="col s6 original">
-                <span>{{p.before}}</span>
+                <span :data="original(p.before)">{{p.before}}</span>
             </div>
             <div class="input-field col s6">
                 <textarea class="materialize-textarea" v-model="p.after"></textarea>
@@ -40,7 +40,19 @@
 .row .original {
     margin-top: 28px;
 }
+
+.sentence del {
+    color: #f44336;
+}
+
+.sentence ins {
+    color: #4caf50;
+}
+
 </style>
+
+{% load static %}
+<script src="{% static "js/jsdiff.js" %}"></script>
 
 <script>
 var Polisher = {
@@ -69,6 +81,9 @@ var Polisher = {
                     window.location.href = data.redirect;
                 }
             })
+        },
+        original: function (before) {
+            return before;
         }
     }
 }
@@ -77,6 +92,19 @@ new Vue({
     el: '#app',
     components: { 'polish-component': Polisher },
     data: {splittedStep: step2edit},
+})
+
+var rows = document.getElementsByClassName('sentence');
+rows = Array.prototype.slice.call(rows, 0);
+rows.map((r) => {
+    var input = r.getElementsByClassName('input-field')[0];
+    input.addEventListener("keyup", (e) => {
+        var originalNode = input.parentNode.getElementsByTagName('span')[0];
+        var changed = e.target.value;
+        var original = originalNode.getAttributeNode('data').value;
+        var diff = diffString(original, changed);
+        originalNode.innerHTML = diff;
+    });
 })
 
 </script>
