@@ -26,8 +26,8 @@
             <span
                 v-else
                 class="splitmark"
-                v-on:click="toggle(c.index)"
-                v-bind:class="{'marked': splitPoints.includes(c.index)}"
+                v-on:click="toggle(c.blankIndex)"
+                v-bind:class="{'marked': splitPoints.includes(c.blankIndex)}"
             >
                 &nbsp
             </span>
@@ -75,27 +75,31 @@
         var currentSentence = "";
         for (var i = 0; i < chars.length; i++) {
             var char = chars[i];
-            if (char.type === 'space')
-                currentSentence += ' '
-            else
+            if (char.type === 'word')
                 currentSentence += char.text;
-            if (markedPoints.indexOf(i) !== -1) {
-                sentences.push(currentSentence);
-                currentSentence = "";
+            else { // Char is space
+                currentSentence += ' ';
+                if (markedPoints.indexOf(char.blankIndex) !== -1) {
+                    sentences.push(currentSentence);
+                    currentSentence = "";
+                }
             }
         }
         sentences.push(currentSentence)
         return sentences
-    }
+    };
 
     var Splitter = {
         template: '#splitter',
         props: { step: Object },
         data: function () {
             return {
-                chars: this.step.result[0].split(' ').reduce((acc, cur, index) => {
-                    return acc.concat([{ type: 'word', text: cur }, { type: 'space', text: '_', index } ])
-                }, []),
+                chars: this.step.result[0].split(' ').reduce(
+                    (acc, cur, index) => {
+                        return acc.concat([
+                            { type: 'word', text: cur },
+                            { type: 'space', text: '_', blankIndex: index } ])
+                    }, []),
                 splitPoints: [],
             }
         },
@@ -106,6 +110,7 @@
                     this.splitPoints.push(pos)
                 else
                     this.splitPoints.splice(index, 1)
+                console.log(this.splitPoints)
             },
             submit: function() {
                 var payload = {
@@ -123,7 +128,7 @@
                 })
             }
         },
-    }
+    };
 
     new Vue({
         el: '#app',
