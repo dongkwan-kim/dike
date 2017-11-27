@@ -22,8 +22,10 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^base/', view.base),
     url(r'^stats/([\d]+)/', view.get_stats),
+    url(r'^family/([\d]+)', view.get_family_tree),
     url(r'^$', view.home),
     url(r'^judgement/([\d]+)/', view.get_judgement),
+    url(r'^judgement/watch/([\d]+)/', view.get_judgement_watch),
     url(r'^sentence/([\d]+)/', view.get_sentence),
     url(r'^editor/split/([\d]+)/', view.get_splitter),
     url(r'^editor/polish/([\d]+)/', view.get_polisher),
@@ -31,5 +33,5 @@ urlpatterns = [
     url(r'^editor/explain/([\d]+)/', view.get_explainer),
     url(r'^vote$', view.handle_vote),
     url(r'^step/([\d]+)/', view.save_step),
-    url(r'^accounts/', include('allauth.urls'))
+    url(r'^accounts/', include('allauth.urls')),
 ]

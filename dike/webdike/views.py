@@ -43,6 +43,22 @@ def get_judgement(request, jnum):
     return render(request, 'judgement.html', {'json_resp': json.dumps(resp)})
 
 
+def get_judgement_watch(request, jnum):
+    doc = Document.objects.get(id=jnum)
+    sentences = Sentence.objects.filter(document__id=jnum)
+    # TODO: Replace it with more plausible algorithm
+    steps = []
+    for sentence in sentences:
+        step = Step.objects.filter(sentence__id=sentence.id).order_by('-id')[0]
+        steps.append(step.to_dict())
+    resp = {
+        'title': doc.title,
+        'desc': doc.description,
+        'steps': steps
+    }
+    return render(request, 'watch.html', {'json_resp': json.dumps(resp)})
+
+
 def get_sentence(request, sentence_id):
     sentence = Sentence.objects.get(id=sentence_id)
     sentence.add_hit()
@@ -153,4 +169,17 @@ def get_stats(request, jnum):
         'sentences': [{'id': s.id, 'text': s.content, 'hit': s.hit} for s in sentences]
     }
     return render(request, 'stats.html', {'json_resp': json.dumps(resp)})
+
+
+def get_family_tree(request, step_id):
+    step_cursor = Step.objects.get(id=step_id)
+    stage = int(step_cursor.stage)
+
+    families = []
+    for i in range(stage + 1):
+        families.insert(0, step_cursor.to_dict())
+        families[0]['step'] = step_cursor.stage_name_korean()
+        step_cursor = step_cursor.parent_step
+
+    return JsonResponse({"family": families})
 

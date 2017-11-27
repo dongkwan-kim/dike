@@ -95,3 +95,16 @@ class Step(models.Model):
         # Return K * v/tv
         return K * v/tv
 
+    def stage_name_korean(self):
+        if self.stage == self.IMPORTED:
+            return '원문'
+        elif self.stage == self.SPLITTED:
+            return '나누기'
+        elif self.stage == self.POLISHED:
+            return '다듬기'
+        elif self.stage == self.CONNECTED:
+            return '잇기'
+        else:
+            return '설명하기'
+
+

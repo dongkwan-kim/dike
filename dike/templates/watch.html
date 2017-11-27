@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id="app">
+    <watch-component></watch-component>
+</div>
+
+
+
+{% verbatim %}
+<template id='watch'>
+    <div>
+        <h3 style="text-align: center">
+            {{ title }}
+        </h3>
+        <blockquote>
+            {{ desc }}
+        </blockquote>
+        <div :style="viewerStyle" class="flow-text">
+            <p v-for="s in steps" v-on:click="openModal(s.id)">
+                <span v-for="r in s.result" class="sentence">
+                    {{ r }}
+                </span>
+            </p>
+        </div>
+        <!-- Modal for detailed history-->
+        <div id="modal1" class="modal">
+            <div class="modal-content">
+                <h4>이 문장의 변천 내역</h4>
+                <div v-for="s in openedTree.family" class="version">
+                    <h5>{{ s.stepa }}</h5>
+                    <p v-for="r in s.result" class="result">
+                        {{ r }}
+                    </p>
+                    <hr />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button
+                    v-on:click="closeModal()"
+                    class="modal-action modal-close waves-effect waves-green btn-flat"
+                >
+                    확인
+                </button>
+            </div>
+        </div>
+    </div>
+</template>
+{% endverbatim %}
+
+<style>
+.sentence {
+    font-size: smaller;
+}
+
+.sentence:hover {
+    background-color: #e2f6ff;
+}
+
+hr {
+    margin: 20px 0;
+}
+
+div.version:hover {
+    background-color: #e2f6ff;
+}
+
+.modal .result {
+    margin: 0 0 3px 0;
+}
+</style>
+
+<script>
+    var resp = {{ json_resp|safe }};
+
+    Vue.component('watch-component', {
+        template: '#watch',
+        data: function() {
+            return {
+                title: resp.title,
+                desc: resp.description,
+                steps: resp.steps,
+                viewerStyle: {lineHeight: 2},
+                openedTree: { family: [] },
+            }
+        },
+        methods: {
+            openModal: function(step_id) {
+                var that = this; // Fuck do I need this in 2017??????
+                $.ajax({
+                    type: 'GET',
+                    url: '/family/' + step_id,
+                    success: function(resp)  {
+                        console.log(resp['family'])
+                        that.openedTree.family = resp["family"];
+                        $('#modal1').modal('open');
+                    }
+                })
+            },
+            closeModal: function() {
+                $('#modal1').modal('close');
+                this.openedTree.family = [];
+            },
+        }
+    });
+
+    new Vue({
+        el: '#app'
+    });
+    $('.modal').modal();
+</script>
+{% endblock %}
