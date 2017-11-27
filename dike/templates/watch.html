@@ -17,7 +17,7 @@
             {{ desc }}
         </blockquote>
         <div :style="viewerStyle" class="flow-text">
-            <p v-for="s in steps" v-on:click="openModal(s.sentence_id)">
+            <p v-for="s in steps" v-on:click="openModal(s.id)">
                 <span v-for="r in s.result" class="sentence">
                     {{ r }}
                 </span>
@@ -26,7 +26,13 @@
         <!-- Modal for detailed history-->
         <div id="modal1" class="modal">
             <div class="modal-content">
-                <h4>{{ clickedSentenceId }} 문장의 변천 내역</h4>
+                <h4>이 문장의 변천 내역</h4>
+                <div v-for="s in openedTree.family" class="version">
+                    <p v-for="r in s.result" class="result">
+                        {{ r }}
+                    </p>
+                    <hr />
+                </div>
             </div>
             <div class="modal-footer">
                 <button
@@ -49,6 +55,18 @@
 .sentence:hover {
     background-color: #e2f6ff;
 }
+
+hr {
+    margin: 20px 0;
+}
+
+div.version:hover {
+    background-color: #e2f6ff;
+}
+
+.modal .result {
+    margin: 3px 0;
+}
 </style>
 
 <script>
@@ -62,17 +80,26 @@
                 desc: resp.description,
                 steps: resp.steps,
                 viewerStyle: {lineHeight: 2},
-                clickedSentenceId: null,
+                openedTree: { family: [] },
             }
         },
         methods: {
-            openModal: function(sentence_id) {
-                this.clickedSentenceId = sentence_id;
-                $('#modal1').modal('open');
+            openModal: function(step_id) {
+{#                this.clickedSentenceId = sentence_id;#}
+                var that = this; // Fuck do I need this in 2017??????
+                $.ajax({
+                    type: 'GET',
+                    url: '/family/' + step_id,
+                    success: function(resp)  {
+                        console.log(resp['family'])
+                        that.openedTree.family = resp["family"];
+                        $('#modal1').modal('open');
+                    }
+                })
             },
             closeModal: function() {
                 $('#modal1').modal('close');
-                this.clickedSentenceId = null;
+                this.openedTree.family = [];
             }
         }
     });

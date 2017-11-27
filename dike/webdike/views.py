@@ -180,5 +180,5 @@ def get_family_tree(request, step_id):
         families.insert(0, step_cursor.to_dict())
         step_cursor = step_cursor.parent_step
 
-    return JsonResponse({"family": json.dumps(families)})
+    return JsonResponse({"family": families})
 
