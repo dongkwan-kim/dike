@@ -80,7 +80,7 @@ def get_explainer(request, step_id):
 
 
 def save_step(request, stage):
-    if int(stage) not in range(1, 4):
+    if int(stage) not in range(1, 5):
         raise Http404("Invalid stage number")
 
     print('save_step', stage)
