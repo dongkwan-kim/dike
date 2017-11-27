@@ -101,7 +101,6 @@ def save_step(request, stage):
     if int(stage) not in range(1, 5):
         raise Http404("Invalid stage number")
 
-    print('save_step', stage)
 
     payloads = json.loads(request.body)
     parent_step_id = payloads.get("parent_step_id", None)
