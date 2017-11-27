@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div id="app">
+    <watch-component></watch-component>
+</div>
+
+{% verbatim %}
+<template id='watch'>
+    <div>
+        <h3 style="text-align: center">
+            {{ title }}
+        </h3>
+        <blockquote>
+            {{ desc }}
+        </blockquote>
+        <div :style="viewerStyle" class="flow-text">
+            <p v-for="s in steps">
+                <span v-for="r in s.result" class="sentence">
+                    {{ r }}
+                </span>
+            </p>
+        </div>
+    </div>
+</template>
+{% endverbatim %}
+
+<style>
+.sentence {
+    font-size: smaller;
+}
+
+.sentence:hover {
+    background-color: #e2f6ff;
+}
+</style>
+
+<script>
+    var resp = {{ json_resp|safe }}
+
+    Vue.component('watch-component', {
+        template: '#watch',
+        data: function() {
+            return {
+                title: resp.title,
+                desc: resp.description,
+                steps: resp.steps,
+                viewerStyle: {lineHeight: 2}
+            }
+        }
+    });
+
+    new Vue({
+        el: '#app'
+    })
+</script>
+{% endblock %}
