@@ -9,6 +9,7 @@
         <div id="app">
             <list-component></list-component>
             <stats-component></stats-component>
+            <watch-component></watch-component>
         </div>
     </div>
 </div>
@@ -27,6 +28,15 @@
     <ul class='collection with-header'>
         <li class="collection-header"><span class="light">개선 통계를 확인할 판결문을 선택해주세요</span></li>
         <a v-for='j in judgements' class='collection-item' :href="`/stats/${j.id}`">
+            {{ j.title }}
+        </a>
+    </ul>
+</template>
+
+<template id='watches'>
+    <ul class='collection with-header'>
+        <li class="collection-header"><span class="light">가독성이 개선된 판결문을 확인해보세요</span></li>
+        <a v-for='j in judgements' class='collection-item' :href="`/judgement/watch/${j.id}`">
             {{ j.title }}
         </a>
     </ul>
@@ -65,6 +75,13 @@
 
     Vue.component('stats-component', {
         template: '#stats',
+        data: () => ({
+            judgements: judgements
+        }),
+    })
+
+    Vue.component('watch-component', {
+        template: '#watches',
         data: () => ({
             judgements: judgements
         }),

@@ -14,7 +14,7 @@
             {{ title }}
         </h3>
         <blockquote>
-            {{ desc }}
+            문장을 클릭하면 유저들의 참여 내역을 확인할 수 있습니다.
         </blockquote>
         <div :style="viewerStyle" class="flow-text">
             <p v-for="s in steps" v-on:click="openModal(s.id)">
