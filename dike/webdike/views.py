@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import Http404, JsonResponse, HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 import json
 from .models import *
 from .natural_selection import change_populations, get_work_routing_info
@@ -59,6 +60,7 @@ def get_judgement_watch(request, jnum):
     return render(request, 'watch.html', {'json_resp': json.dumps(resp)})
 
 
+@login_required
 def get_sentence(request, sentence_id):
     sentence = Sentence.objects.get(id=sentence_id)
     sentence.add_hit()
