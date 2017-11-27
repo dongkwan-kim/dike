@@ -28,6 +28,7 @@
             <div class="modal-content">
                 <h4>이 문장의 변천 내역</h4>
                 <div v-for="s in openedTree.family" class="version">
+                    <h5>{{ s.stepa }}</h5>
                     <p v-for="r in s.result" class="result">
                         {{ r }}
                     </p>
@@ -65,7 +66,7 @@ div.version:hover {
 }
 
 .modal .result {
-    margin: 3px 0;
+    margin: 0 0 3px 0;
 }
 </style>
 
@@ -85,7 +86,6 @@ div.version:hover {
         },
         methods: {
             openModal: function(step_id) {
-{#                this.clickedSentenceId = sentence_id;#}
                 var that = this; // Fuck do I need this in 2017??????
                 $.ajax({
                     type: 'GET',
@@ -100,7 +100,7 @@ div.version:hover {
             closeModal: function() {
                 $('#modal1').modal('close');
                 this.openedTree.family = [];
-            }
+            },
         }
     });
 

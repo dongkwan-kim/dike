@@ -178,6 +178,7 @@ def get_family_tree(request, step_id):
     families = []
     for i in range(stage + 1):
         families.insert(0, step_cursor.to_dict())
+        families[0]['step'] = step_cursor.stage_name_korean()
         step_cursor = step_cursor.parent_step
 
     return JsonResponse({"family": families})
