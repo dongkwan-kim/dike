@@ -48,19 +48,17 @@
 
         <!-- Various constants (including mock data) -->
         <script src="/static/js/constants.js"></script>
+        <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+        <script src="/static/js/common.js"></script>
 
         <div class="container">
             {% block content %}
             {% endblock %}
         </div>
 
-        <!--Import jQuery before materialize.js-->
-        <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-        <script src="/static/js/common.js"></script>
-
         <script>
-        $(".button-collapse").sideNav();
+            $(".button-collapse").sideNav();
         </script>
     </body>
 </html>

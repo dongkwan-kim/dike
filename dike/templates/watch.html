@@ -5,6 +5,8 @@
     <watch-component></watch-component>
 </div>
 
+
+
 {% verbatim %}
 <template id='watch'>
     <div>
@@ -15,11 +17,25 @@
             {{ desc }}
         </blockquote>
         <div :style="viewerStyle" class="flow-text">
-            <p v-for="s in steps">
+            <p v-for="s in steps" v-on:click="openModal(s.sentence_id)">
                 <span v-for="r in s.result" class="sentence">
                     {{ r }}
                 </span>
             </p>
+        </div>
+        <!-- Modal for detailed history-->
+        <div id="modal1" class="modal">
+            <div class="modal-content">
+                <h4>{{ clickedSentenceId }} 문장의 변천 내역</h4>
+            </div>
+            <div class="modal-footer">
+                <button
+                    v-on:click="closeModal()"
+                    class="modal-action modal-close waves-effect waves-green btn-flat"
+                >
+                    확인
+                </button>
+            </div>
         </div>
     </div>
 </template>
@@ -36,7 +52,7 @@
 </style>
 
 <script>
-    var resp = {{ json_resp|safe }}
+    var resp = {{ json_resp|safe }};
 
     Vue.component('watch-component', {
         template: '#watch',
@@ -45,13 +61,25 @@
                 title: resp.title,
                 desc: resp.description,
                 steps: resp.steps,
-                viewerStyle: {lineHeight: 2}
+                viewerStyle: {lineHeight: 2},
+                clickedSentenceId: null,
+            }
+        },
+        methods: {
+            openModal: function(sentence_id) {
+                this.clickedSentenceId = sentence_id;
+                $('#modal1').modal('open');
+            },
+            closeModal: function() {
+                $('#modal1').modal('close');
+                this.clickedSentenceId = null;
             }
         }
     });
 
     new Vue({
         el: '#app'
-    })
+    });
+    $('.modal').modal();
 </script>
 {% endblock %}
