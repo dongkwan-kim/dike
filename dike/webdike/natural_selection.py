@@ -53,7 +53,7 @@ def get_work_routing_info(sid):
     # Count TN, total populations of Step instances w/ *next stage*
     current_stage = int(step.stage)
     next_stage = current_stage + 1
-    steps = step.step_set.all()
+    steps = Step.objects.filter(stage=next_stage)
     g = steps.count()
     TN = sum([x.population for x in steps])
 
