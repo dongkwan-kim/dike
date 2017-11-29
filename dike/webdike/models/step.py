@@ -28,6 +28,10 @@ class Step(models.Model):
     result = pgfields.ArrayField(models.TextField(), default=[])
     parent_step = models.ForeignKey('self', null=True)
 
+    def __str__(self):
+        return 'Step --id-{} --stage-{} --vote-{} --pop-{}'\
+            .format(str(self.id), str(self.stage), str(self.vote), str(self.population))
+
     def to_dict(self):
         """Return id and result in json format. Used in template"""
         return {
@@ -49,6 +53,10 @@ class Step(models.Model):
         :param K: total carrying capacity
         :return: float
         """
+        N = self.population
+        if N == 0:
+            return 0
+
         # Get maximum growth rate, r(v),
         rv = self.get_max_growth_rate()
 
@@ -56,8 +64,8 @@ class Step(models.Model):
         k = self.get_carrying_capacity(K)
 
         # Return r(v) * N * (1 - N/K)
-        N = self.population
-        return rv * N * (1 - N/k)
+        r = rv * N * (1 - N/k)
+        return r
 
     def get_max_growth_rate(self):
         """Get maximum growth rate.
@@ -87,7 +95,7 @@ class Step(models.Model):
         v = self.vote
 
         # Get total voting counts of that generation, tv
-        tv = Step.objects.filter(stage=self.stage).count()
+        tv = sum([s.vote for s in Step.objects.filter(stage=self.stage)])
 
         if K is 0 or tv is 0:
             print('000')
