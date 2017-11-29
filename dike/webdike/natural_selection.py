@@ -59,11 +59,14 @@ def get_work_routing_info(sid):
 
     # Determine votable, creatable
     # Alternative way: creatable = True always
-    if g < 1:
+    if current_stage == 4:
+        votable, creatable = (False, False)
+    elif g < 1:
         votable, creatable = (False, True)
     elif g >= 1 and TN < K:
         votable, creatable = (True, True)
-    elif g >= 1 and TN >= K:
+    else:
+        # g >= 1 and TN >= K
         votable, creatable = (True, False)
 
     # Make step_list
@@ -93,7 +96,7 @@ def change_populations(target_stage):
 
     # In iterations of Steps whose stage is target_stage
     # Add dN/dt to Step.population
-    current_steps = Step.objects.filter(stage=target_stage)
+    current_steps = Step.objects.filter(stage=target_stage).exclude(population=0)
     for step in current_steps:
         N = step.population
         N += step.get_growth_rate(K)
