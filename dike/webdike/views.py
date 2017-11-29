@@ -35,18 +35,19 @@ def home(request):
 
 def get_judgement(request, jnum):
     doc = Document.objects.get(id=jnum)
-    sentences = Sentence.objects.filter(document__id=jnum)
+    sentences = Sentence.objects.filter(document__id=jnum).order_by('id')
     resp = {
         'title': doc.title,
         'desc': doc.description,
         'sentences': [{'id': s.id, 'text': s.content} for s in sentences]
     }
+    print(resp)
     return render(request, 'judgement.html', {'json_resp': json.dumps(resp)})
 
 
 def get_judgement_watch(request, jnum):
     doc = Document.objects.get(id=jnum)
-    sentences = Sentence.objects.filter(document__id=jnum)
+    sentences = Sentence.objects.filter(document__id=jnum).order_by('id')
     # TODO: Replace it with more plausible algorithm
     steps = []
     for sentence in sentences:
@@ -163,7 +164,7 @@ def save_vote(request):
 
 def get_stats(request, jnum):
     doc = Document.objects.get(id=jnum)
-    sentences = Sentence.objects.filter(document__id=jnum)
+    sentences = Sentence.objects.filter(document__id=jnum).order_by('id')
     resp = {
         'title': doc.title,
         'desc': doc.description,
