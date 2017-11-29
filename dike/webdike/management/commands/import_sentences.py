@@ -30,3 +30,7 @@ class Command(BaseCommand):
                 result=[line],
             )
             new_step.save()
+
+        parent_doc.last_valid_step_id = new_step.id
+        parent_doc.save()
+
