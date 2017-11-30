@@ -79,9 +79,7 @@ class Step(models.Model):
         # Get total voting counts of that generation, tv
         tv = self.get_total_votes()
 
-        # Return a * v/tv (temporarily a = 2)
-        a = 2
-        return 1
+        return min(2 * tv/10, 2)
 
     def get_carrying_capacity(self, K):
         """Get carrying capacity.
