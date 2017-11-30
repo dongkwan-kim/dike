@@ -1,11 +1,10 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="card-panel teal">
-    <span class="white-text">
-        다음 중 가독성이 더 높은 문장 분할을 선택해주세요
-    </span>
-</div>
+<h5 class="header lighter" style="line-height: 1.4;">
+    다음 중 가독성이 더 높은 문장 분할을 선택해주세요
+</h5>
+
 <div id="app">
     <vote-component
     :step1="step1"
@@ -15,24 +14,28 @@
 
 {% verbatim %}
 <template id="vote-template">
-    <div class="row">
-        <div class="col s6">
-            <p>
-                <input type="radio" id="one" value="left" v-model="selected" />
-                <label for="one">첫번째 분할</label>
-            </p>
-            <p v-for="p in step2.result">
-                {{p}}
-            </p>
-        </div>
-        <div class="col s6">
-            <p>
-                <input type="radio" id="second" value="right" v-model="selected"/>
-                <label for="second">두번째 분할</label>
-            </p>
-            <p v-for="p in step1.result">
-                {{p}}
-            </p>
+    <div>
+        <div class="card-panel grey lighten-5">
+            <div class="row">
+                <div class="col s6">
+                    <p>
+                    <input type="radio" id="one" value="left" v-model="selected" />
+                    <label for="one">첫번째 분할</label>
+                    </p>
+                    <p v-for="p in step1.result">
+                    {{p}}
+                    </p>
+                </div>
+                <div class="col s6">
+                    <p>
+                    <input type="radio" id="second" value="right" v-model="selected"/>
+                    <label for="second">두번째 분할</label>
+                    </p>
+                    <p v-for="p in step2.result">
+                    {{p}}
+                    </p>
+                </div>
+            </div>
         </div>
         <button class="btn waves-effect waves-light" type="submit" name="action" v-on:click="submit()">Submit
             <i class="material-icons right">send</i>
@@ -55,7 +58,7 @@ var Voter = {
         submit: function() {
             var payload = {
                 step_id: this.selected === "left" ? this.step1.id : this.step2.id
-            }
+            };
             $.ajax({
                 type: 'POST',
                 url: '/vote',
