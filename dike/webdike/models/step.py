@@ -113,5 +113,5 @@ class Step(models.Model):
             return '설명하기'
 
     def get_total_votes(self):
-        tv = sum([s.vote for s in Step.objects.filter(stage=self.stage)])
+        tv = sum([s.vote for s in Step.objects.filter(stage=self.stage, sentence__id=self.sentence.id)])
         return tv

@@ -48,6 +48,7 @@ def get_work_routing_info(sid):
 
     # Find Step from sid
     step = Step.objects.get(id=sid)
+    sentence_id = step.sentence.id
     current_stage = int(step.stage)
 
     # Count g, the number of Step instances w/ *next stage*
@@ -55,7 +56,7 @@ def get_work_routing_info(sid):
     next_stage = current_stage
     for _ in range(5):
         next_stage = next_stage + 1
-        steps_total = Step.objects.filter(stage=next_stage)
+        steps_total = Step.objects.filter(stage=next_stage, sentence__id=sentence_id)
         steps = steps_total.filter(population__gte=1)
 
         g_total = steps_total.count()
@@ -93,7 +94,7 @@ def get_work_routing_info(sid):
     }
 
 
-def change_populations(target_stage):
+def change_populations(target_stage, target_sentence_id):
     """Steps wil grow or die.
 
     |dN/dt| of Steps will grow (>0) or die (<0).
@@ -106,7 +107,7 @@ def change_populations(target_stage):
 
     # In iterations of Steps whose stage is target_stage
     # Add dN/dt to Step.population
-    current_steps = Step.objects.filter(stage=target_stage, population__gte=1)
+    current_steps = Step.objects.filter(stage=target_stage, population__gte=1, sentence__id=target_sentence_id)
     for step in current_steps:
         N = step.population
         N += step.get_growth_rate(K)
