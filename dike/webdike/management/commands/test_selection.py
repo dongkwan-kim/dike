@@ -42,7 +42,7 @@ class Command(BaseCommand):
 
         ordinal = lambda n: "%d%s" % (n, "tsnrhtdd"[(math.floor(n / 10) % 10 != 1) * (n % 10 < 4) * n % 10::4])
 
-        for i in range(users):
+        for i in range(1, users + 1):
 
             current_step = initial_step
             trials = random.randint(1, 5)
@@ -55,11 +55,10 @@ class Command(BaseCommand):
                 creatable = next_action['creatable']
                 votable = next_action['votable']
                 pprint.pprint(next_action)
+                next_stage = next_action['next_stage']
 
+                new_step = None
                 if creatable:
-                    next_stage = current_step.stage + 1
-                    print('\tcreating step at {} stage'.format(next_stage))
-
                     new_step = Step.objects.create(
                         stage=next_stage,
                         result=[str(i), str(i)],
@@ -67,10 +66,11 @@ class Command(BaseCommand):
                         parent_step=current_step
                     )
                     new_step.save()
-                    current_step = new_step
+                    next_action["step_list"] = [new_step] + next_action["step_list"]
+                    print('\tcreating step(id={}) at {} stage'.format(new_step.id, next_stage))
 
+                winner = None
                 if votable:
-                    print('\tvoting')
                     step_list = next_action["step_list"]
                     rest_list = step_list[2:]
 
@@ -82,13 +82,17 @@ class Command(BaseCommand):
                         winner = random.choice([winner, rest_list[0]])
                         rest_list = rest_list[1:]
 
+                    print('\tvoting w/ {} candidates. winner is {}'.format(len(step_list), winner.id))
+
+                current_step = winner or new_step
+
                 # current step is 4
                 if not creatable and not votable:
-                    # current_step = Step.objects.get(id=sample_step_id)
                     break
 
                 # Change populations of next generation
-                change_populations(current_step.stage + 1)
+                print('\tchange population of {} stage'.format(next_stage))
+                change_populations(next_stage)
 
             if not options['nostop']:
                 input('\tenter any key to proceed\n')

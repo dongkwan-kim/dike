@@ -48,12 +48,11 @@ def get_work_routing_info(sid):
 
     # Find Step from sid
     step = Step.objects.get(id=sid)
+    current_stage = int(step.stage)
 
     # Count g, the number of Step instances w/ *next stage*
-    current_stage = int(step.stage)
-    next_stage = current_stage
-
     (g, steps) = (-1, None)
+    next_stage = current_stage
     for _ in range(5):
         next_stage = next_stage + 1
         steps_total = Step.objects.filter(stage=next_stage)
@@ -65,12 +64,11 @@ def get_work_routing_info(sid):
         if next_stage >= 5:
             break
 
-        # Natural selected.
+        # Not natural selected.
         if g_total < 5 or g != 1:
             break
 
     # Determine votable, creatable
-    # Alternative way: creatable = True always
     if next_stage == 5:
         votable, creatable = (False, False)
     elif g < 1:
@@ -108,7 +106,7 @@ def change_populations(target_stage):
 
     # In iterations of Steps whose stage is target_stage
     # Add dN/dt to Step.population
-    current_steps = Step.objects.filter(stage=target_stage).exclude(population=0)
+    current_steps = Step.objects.filter(stage=target_stage, population__gte=1)
     for step in current_steps:
         N = step.population
         N += step.get_growth_rate(K)
