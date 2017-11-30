@@ -77,11 +77,10 @@ class Step(models.Model):
         v = self.vote
 
         # Get total voting counts of that generation, tv
-        tv = Step.objects.filter(stage=self.stage).count()
+        tv = self.get_total_votes()
 
         # Return a * v/tv (temporarily a = 2)
         a = 2
-        # return a * v/tv
         return 1
 
     def get_carrying_capacity(self, K):
@@ -95,7 +94,7 @@ class Step(models.Model):
         v = self.vote
 
         # Get total voting counts of that generation, tv
-        tv = sum([s.vote for s in Step.objects.filter(stage=self.stage)])
+        tv = self.get_total_votes()
 
         if K is 0 or tv is 0:
             print('000')
@@ -115,4 +114,6 @@ class Step(models.Model):
         else:
             return '설명하기'
 
-
+    def get_total_votes(self):
+        tv = sum([s.vote for s in Step.objects.filter(stage=self.stage)])
+        return tv
