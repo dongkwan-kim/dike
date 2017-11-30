@@ -29,7 +29,7 @@ Scenenario
 
 # We can manipulate this value for our purpose.
 # Carrying capacity of the environment.
-K = 8
+K = 10
 
 
 def get_work_routing_info(sid):
@@ -50,23 +50,34 @@ def get_work_routing_info(sid):
     step = Step.objects.get(id=sid)
 
     # Count g, the number of Step instances w/ *next stage*
-    # Count TN, total populations of Step instances w/ *next stage*
     current_stage = int(step.stage)
-    next_stage = current_stage + 1
-    steps = Step.objects.filter(stage=next_stage)
-    g = steps.count()
-    TN = sum([x.population for x in steps])
+    next_stage = current_stage
+
+    (g, steps) = (-1, None)
+    for _ in range(5):
+        next_stage = next_stage + 1
+        steps_total = Step.objects.filter(stage=next_stage)
+        steps = steps_total.filter(population__gte=1)
+
+        g_total = steps_total.count()
+        g = steps.count()
+
+        if next_stage >= 5:
+            break
+
+        # Natural selected.
+        if g_total < 5 or g != 1:
+            break
 
     # Determine votable, creatable
     # Alternative way: creatable = True always
-    if current_stage == 4:
+    if next_stage == 5:
         votable, creatable = (False, False)
     elif g < 1:
         votable, creatable = (False, True)
-    elif g >= 1 and TN < K:
+    elif g < 5:
         votable, creatable = (True, True)
     else:
-        # g >= 1 and TN >= K
         votable, creatable = (True, False)
 
     # Make step_list
@@ -74,12 +85,13 @@ def get_work_routing_info(sid):
         # step_list = list of Steps (next_stage) in descending order by votes
         step_list = list(steps.order_by('-population'))
     else:
-        step_list = None
+        step_list = []
 
     return {
         'votable': votable,
         'creatable': creatable,
         'step_list': step_list,
+        'next_stage': next_stage,
     }
 
 
