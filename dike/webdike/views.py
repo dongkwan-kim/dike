@@ -68,7 +68,8 @@ def get_route_url_by_natural_select(request, target_step):
 
     if not creatable and not votable:
         jnum = target_step.sentence.document.id
-        url = "/judgement/{}".format(jnum)
+        complete = 'already' if target_step.stage == 0 else 'completed'
+        url = "/judgement/{}?complete={}".format(jnum, complete)
         return url
 
     next_stage = STEP_TO_URL[str(todo['next_stage'])]
