@@ -18,13 +18,14 @@ class Step(models.Model):
         (CONNECTED, 'Connected'),
         (EXPLAINED, 'Explained'),
     )
+    POPULATION_DEFAULT = 2
 
     stage = models.IntegerField(
         choices=STAGE_CHOICES,
     )
     sentence = models.ForeignKey(Sentence)
     vote = models.IntegerField(default=1)
-    population =models.FloatField(default=2)
+    population = models.FloatField(default=POPULATION_DEFAULT)
     result = pgfields.ArrayField(models.TextField(), default=[])
     parent_step = models.ForeignKey('self', null=True)
 
@@ -79,7 +80,7 @@ class Step(models.Model):
         # Get total voting counts of that generation, tv
         tv = self.get_total_votes()
 
-        return min(2 * tv/10, 2)
+        return self.POPULATION_DEFAULT * min(tv/10, 1)
 
     def get_carrying_capacity(self, K):
         """Get carrying capacity.
