@@ -148,16 +148,21 @@ def save_step(request, stage):
         print('err!!')
         raise Http404("Failed to parse result")
 
-    new_step = Step.objects.create(
+    new_step, created = Step.objects.get_or_create(
         stage=stage,
         result=result,
         sentence_id=payloads["sentence_id"]
     )
-    if parent_step_id:
-        new_step.parent_step_id = parent_step_id
-    new_step.save()
 
     rest_list = request.session['step_list']
+    if not created:
+        new_step.do_vote()
+        rest_list.remove(new_step.id)
+    else:
+        if parent_step_id:
+            new_step.parent_step_id = parent_step_id
+        new_step.save()
+
     if rest_list:
         return route_winner_or_new_to_vote(request, new_step)
     else:
