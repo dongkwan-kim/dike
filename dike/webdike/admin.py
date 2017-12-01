@@ -3,8 +3,11 @@ from django.contrib import admin
 from webdike.models import *
 
 
-def list_display_all(cls):
-    return [x.name for x in cls._meta.fields if x.name != 'id']
+def list_display_all(cls, blacklist=[]):
+    l = [x.name for x in cls._meta.fields if x.name != 'id']
+    for b in blacklist:
+        l.remove(b)
+    return l
 
 
 @admin.register(UserProfile)
@@ -29,7 +32,7 @@ class SentenceAdmin(admin.ModelAdmin):
 
 @admin.register(Step)
 class StepAdmin(admin.ModelAdmin):
-    list_display = ['id'] + list_display_all(Step)
+    list_display = ['id'] + list_display_all(Step, ['result'])
     list_filter = ['stage']
 
 
