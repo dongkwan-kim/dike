@@ -33,6 +33,6 @@ class SentenceAdmin(admin.ModelAdmin):
 @admin.register(Step)
 class StepAdmin(admin.ModelAdmin):
     list_display = ['id'] + list_display_all(Step, ['result'])
-    list_filter = ['stage']
+    list_filter = ['stage', 'sentence']
 
 
