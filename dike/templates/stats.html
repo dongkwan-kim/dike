@@ -73,12 +73,12 @@
             aStyle: function (hit) {
                 var sum = this.hitSum;
                 return {
-                    backgroundColor: `rgba(239, 109, 115, ${(hit/sum)*0.7})`,
+                    backgroundColor: `rgba(239, 109, 115, ${1 - Math.pow(Math.E, - (10*hit/sum))})`,
                 }
             },
             grad: function () {
                 var sum = this.hitSum;
-                var colorMax = `rgba(239, 109, 115, ${(this.hitMax/sum)*0.7})`
+                var colorMax = `rgba(239, 109, 115, ${1 - Math.pow(Math.E, - (10*this.hitMax/sum))})`
                 var r = {
                     background: `linear-gradient(to right, white, ${colorMax})`,
                     width: '50%',
