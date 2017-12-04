@@ -109,6 +109,9 @@ def change_populations(target_stage, target_sentence_id):
     # Add dN/dt to Step.population
     current_steps = Step.objects.filter(stage=target_stage, population__gte=1, sentence__id=target_sentence_id)
     for step in current_steps:
+
+        StepLog.create(step).save()
+
         N = step.population
         N += step.get_growth_rate(K)
         if N < 0:

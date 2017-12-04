@@ -116,3 +116,19 @@ class Step(models.Model):
     def get_total_votes(self):
         tv = sum([s.vote for s in Step.objects.filter(stage=self.stage, sentence__id=self.sentence.id)])
         return tv
+
+
+class StepLog(models.Model):
+    step = models.ForeignKey(Step)
+    created_at = models.DateTimeField(auto_now_add=True)
+    vote = models.IntegerField()
+    population = models.FloatField()
+
+    @classmethod
+    def create(cls, step):
+        step_log = cls(step=step)
+        step_log.vote = step.vote
+        step_log.population = step.population
+        return step_log
+
+

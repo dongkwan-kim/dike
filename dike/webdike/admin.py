@@ -36,3 +36,8 @@ class StepAdmin(admin.ModelAdmin):
     list_filter = ['stage', 'sentence']
 
 
+@admin.register(StepLog)
+class StepLogAdmin(admin.ModelAdmin):
+    list_display = list_display_all(StepLog)
+
+
