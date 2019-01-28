@@ -16,5 +16,5 @@ We support three tasks : (1) People can contribute to paraphrase statements in w
 - A judgement (.txt) for deploy is in `data/`.
 - LICENSE, README, requirements.txt are in `root`.
 
-### [Paper](https://github.com/todoaskit/dike/blob/master/jung2017dike.pdf)
+### [Paper](https://github.com/dongkwan-kim/dike/blob/master/jung2017dike.pdf)
 
